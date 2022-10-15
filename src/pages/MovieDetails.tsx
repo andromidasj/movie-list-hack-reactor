@@ -32,25 +32,25 @@ function MovieDetails() {
   if (isError) return <p>{JSON.stringify(error)}</p>;
 
   const movie = data!.data;
+  console.log('🚀 ~ MovieDetails ~ movie', movie);
 
-  // TODO: extract to util fn
+  // TODO: extract below to custom hook?
   // Sort by 1. official, 2. type, 3. official (title)
-  let videoArrSorted = movie.videos.results.sort((a, b) => {
-    return a.official === b.official ? 0 : a.official ? -1 : 1;
-  });
+  let videoArrSorted = movie.videos.results.sort((a, b) =>
+    a.official === b.official ? 0 : a.official ? -1 : 1
+  );
 
-  videoArrSorted = videoArrSorted.sort((a, b) => {
-    return a.type === b.type ? 0 : a.type === 'Trailer' ? -1 : 1;
-  });
+  videoArrSorted = videoArrSorted.sort((a, b) =>
+    a.type === b.type ? 0 : a.type === 'Trailer' ? -1 : 1
+  );
 
-  videoArrSorted = videoArrSorted.sort((a, b) => {
-    return a.name.toLowerCase().includes('official')
+  videoArrSorted = videoArrSorted.sort((a, b) =>
+    a.name.toLowerCase().includes('official')
       ? -1
       : b.name.toLowerCase().includes('official')
       ? 1
-      : 0;
-  });
-  //
+      : 0
+  );
 
   const video = videoArrSorted?.[0];
   const trailerLink = 'https://www.youtube.com/embed/' + video?.key;
@@ -58,17 +58,21 @@ function MovieDetails() {
   const actorArr = [];
   for (let i = 0; i < 60; i++) {
     const actor = movie.credits.cast[i];
-    if (!actor) {
-      break;
-    }
+
+    if (!actor) break;
+
     actorArr.push(actor);
   }
 
-  const usRating = movie.releaseDates.results.find((e) => e.iso31661 === 'US');
+  const usReleases = movie.releaseDates.results.find(
+    (e) => e.iso_3166_1 === 'US'
+  )?.releaseDates;
 
   const mpaaRating =
-    usRating?.releaseDates[usRating.releaseDates.length - 1].certification ||
-    movie.releaseDates.results[0].releaseDates[0].certification;
+    usReleases?.length || -1 > 0
+      ? usReleases![usReleases!.length - 1]!.certification ||
+        movie.releaseDates.results[0].releaseDates[0].certification
+      : null;
 
   // TODO: runtime can be null
   const runtime = `
@@ -138,7 +142,7 @@ function MovieDetails() {
         </div>
 
         <WatchProviders
-          providers={movie['watch/providers'].results.US}
+          providers={movie.watchProviders.results.us}
           title={movie.title}
         />
       </div>

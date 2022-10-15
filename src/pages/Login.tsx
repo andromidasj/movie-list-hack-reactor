@@ -8,30 +8,22 @@ import {
 } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 
-import { API, TRAKT } from '../util/api';
+import { useEffect, useState } from 'react';
+import { LocalStorage } from '../models/enums/LocalStorageKeys';
+import { API } from '../util/api';
 
 const REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob';
+const AUTH_URL = 'https://trakt.tv/oauth/authorize';
+const TOKEN_URL = 'https://api.trakt.tv/oauth/token';
 
 function Login() {
   const [clickedLogin, setClickedLogin] = useState(false);
   const [code, setCode] = useState('');
-  console.log('🚀 ~ Login ~ code', code);
   const [error, setError] = useState<React.ReactElement | null>(null);
 
-  const [, setToken] = useLocalStorage({
-    key: 'access_token',
-  });
-  const [, setUsername] = useLocalStorage({
-    key: 'user_id',
-  });
-
-  const settings = useQuery(['settings'], () => {
-    TRAKT.get('https://api.trakt.tv/users/settings');
-  });
-  console.log('🚀 ~ Lists ~ settings', settings);
+  const [, setToken] = useLocalStorage({ key: LocalStorage.ACCESS_TOKEN });
+  const [, setUsername] = useLocalStorage({ key: LocalStorage.USER_ID });
 
   // TODO: replace window with useNavigation()
   useEffect(() => {
@@ -46,7 +38,7 @@ function Login() {
   }, []);
 
   const authRedirect = () => {
-    const authUrl = new URL('https://trakt.tv/oauth/authorize');
+    const authUrl = new URL(AUTH_URL);
     authUrl.searchParams.set('response_type', 'code');
     authUrl.searchParams.set('client_id', process.env.REACT_APP_TRAKT_API_KEY!);
     authUrl.searchParams.set('redirect_uri', REDIRECT_URI);
@@ -65,15 +57,11 @@ function Login() {
     };
 
     try {
-      const response = await axios.post(
-        'https://api.trakt.tv/oauth/token',
-        obj,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await axios.post(TOKEN_URL, obj, {
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
+      });
       console.log('🚀 ~ handleAuth ~ response', response);
       setToken(response.data.access_token);
 

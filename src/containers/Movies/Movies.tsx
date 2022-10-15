@@ -44,10 +44,7 @@ function Movies({ movies, list, watched, listName }: MoviesProps) {
     <>
       {movies.length ? (
         <>
-          {/* TODO: was h="14vh" */}
-          <Space h={50} />
-          <Space h="sm" />
-          <Container>
+          <Container mt={135}>
             <SimpleGrid cols={3} spacing="sm">
               {movieCards}
             </SimpleGrid>

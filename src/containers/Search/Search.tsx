@@ -1,4 +1,4 @@
-import { Container, SimpleGrid, Space } from '@mantine/core';
+import { Container, SimpleGrid } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useQuery } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
@@ -26,22 +26,15 @@ function Search({ listName }: SearchProps) {
     { enabled: debouncedQuery.length > 0 }
   );
 
-  if (isLoading) {
-    return <h1>Loading</h1>;
-  }
+  if (isLoading) return <h1>Loading</h1>;
 
-  if (isError) {
-    return <h1>Error</h1>;
-  }
+  if (isError) return <h1>Error</h1>;
 
   return (
     <>
       {data && (
         <>
-          {/* TODO: change to vh:14 */}
-          <Space h={50} />
-          <Space h="sm" />
-          <Container>
+          <Container mt={135}>
             <SimpleGrid cols={3}>
               {data.data.results.map((movie) => {
                 if (movie.posterPath) {

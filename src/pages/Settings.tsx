@@ -1,27 +1,18 @@
-import {
-  Button,
-  Center,
-  Checkbox,
-  Container,
-  Divider,
-  Group,
-  Space,
-  Stack,
-  Title,
-} from "@mantine/core";
-import uuid from "react-uuid";
-import { TitleNav } from "../components";
+import { Button, Checkbox, Divider, Group, Stack, Title } from '@mantine/core';
+import uuid from 'react-uuid';
+import { TitleNav } from '../components';
+import { LocalStorage } from '../models/enums/LocalStorageKeys';
 
-import useStore from "../store";
-import "./Settings.scss";
+import useStore from '../store';
+import './Settings.scss';
 
 function Settings() {
   const providers = useStore((state) => state.providers);
   const setProviders = useStore((state) => state.setProviders);
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("user_id");
-    window.location.replace("/login");
+    localStorage.removeItem(LocalStorage.ACCESS_TOKEN);
+    localStorage.removeItem(LocalStorage.USER_ID);
+    window.location.href = '/login';
   };
 
   const list = providers.map((e, i) => (
@@ -41,8 +32,8 @@ function Settings() {
   return (
     <>
       <TitleNav title="Settings" />
-      <Space h={50} />
-      <Center>
+
+      <Stack spacing="xl" m="xl">
         <Button
           onClick={handleLogout}
           variant="outline"
@@ -52,18 +43,16 @@ function Settings() {
         >
           Logout
         </Button>
-      </Center>
-      <Space h={50} />
 
-      <Container>
         <Divider
           my="xs"
           label="My Providers"
           labelPosition="center"
-          labelProps={{ size: "xl" }}
+          labelProps={{ size: 'xl' }}
         />
+
         <Stack>{list}</Stack>
-      </Container>
+      </Stack>
     </>
   );
 }

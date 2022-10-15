@@ -6,7 +6,6 @@ import {
   Group,
   Space,
 } from '@mantine/core';
-import { useEffect } from 'react';
 import { GearWideConnected, PlusLg } from 'react-bootstrap-icons';
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
@@ -22,29 +21,13 @@ function Lists() {
   setTab('toWatch');
   setSearchQuery('');
 
-  useEffect(() => {
-    API.getStats()
-      .then((res) => console.log(res))
-      .catch(() => {
-        window.location.replace('/login');
-      });
-  }, []);
-
   const { data, isLoading, isError } = useQuery('lists', API.getLists);
-  console.log('🚀 ~ Lists ~ { data, isLoading, isError }', {
-    data,
-    isLoading,
-    isError,
-  });
 
   if (isLoading) return <h1>Loading...</h1>;
 
-  if (isError) {
-    navigate('/login');
-  }
+  if (isError) navigate('/login');
 
   const lists = data!.data;
-  console.log('🚀 ~ Lists ~ lists', lists);
 
   // TODO: specify type
   let listInfoArray: any = [];
@@ -91,7 +74,7 @@ function Lists() {
           </Link>
         </Group>
       </div>
-      {/* <div className="lists-container"> */}
+
       <Space h="xl" />
       <Container px="xl">
         <Group grow>
@@ -121,7 +104,6 @@ function Lists() {
           ))}
         </Group>
       </Container>
-      {/* </div> */}
     </>
   );
 }

@@ -1,5 +1,5 @@
 export interface WatchProvider {
-  iso31661: string;
+  iso_3166_1: string;
   englishName: string;
   nativeName: string;
 }

@@ -1,4 +1,4 @@
 export interface ProductionCountry {
-  iso31661: string;
+  iso_3166_1: string;
   name: string;
 }

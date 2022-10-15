@@ -30,7 +30,7 @@ export interface TmdbMovie {
   voteAverage: number;
   voteCount: number;
   videos: Videos;
-  'watch/providers': WatchProviders;
+  watchProviders: WatchProviders;
   releaseDates: ReleaseDates;
   recommendations: Recommendations;
   credits: Credits;
@@ -45,7 +45,7 @@ interface Videos {
 
 interface Video {
   iso6391: string;
-  iso31661: string;
+  iso_3166_1: string;
   name: string;
   key: string;
   site: string;
@@ -61,7 +61,7 @@ interface ReleaseDates {
 }
 
 interface ReleaseDateResult {
-  iso31661: string;
+  iso_3166_1: string;
   releaseDates: ReleaseDate[];
 }
 
@@ -161,7 +161,7 @@ interface WatchProviders {
 }
 
 interface WPResults {
-  US: Us;
+  us: Us;
 }
 
 interface Us {

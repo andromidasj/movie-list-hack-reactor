@@ -46,7 +46,6 @@ function ListStats() {
   ];
 
   const handleListDelete = () => {
-    // console.log('DELETING LISTS...');
     [listId, watchedId].forEach((list) => {
       deleteList.mutate(+list!, {
         onSuccess: () => {

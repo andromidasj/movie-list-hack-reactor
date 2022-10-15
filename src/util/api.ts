@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import applyCaseMiddleware from 'axios-case-converter';
+import { LocalStorage } from '../models/enums/LocalStorageKeys';
+
 import { SearchResponse } from '../models/tmdb/SearchResponse';
 import { TmdbMovie } from '../models/tmdb/TmdbMovie';
 import { WatchProviderResponse } from '../models/tmdb/WatchProviderResponse';
@@ -16,8 +18,12 @@ interface ListMovieInput {
   listId: number;
 }
 
-const ACCOUNT_ID = JSON.parse(localStorage.getItem('user_id') || '');
-const ACCESS_TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
+const ACCOUNT_ID = JSON.parse(
+  localStorage.getItem(LocalStorage.USER_ID) || '""'
+);
+const ACCESS_TOKEN = JSON.parse(
+  localStorage.getItem(LocalStorage.ACCESS_TOKEN) || '""'
+);
 const BASE_URL = 'https://api.themoviedb.org';
 
 const TMDB = applyCaseMiddleware(
@@ -71,8 +77,6 @@ export const API = {
   getListItems: (listId: number): Promise<AxiosResponse<ListItems[]>> =>
     TRAKT.get(`users/${ACCOUNT_ID}/lists/${listId}/items`),
 
-  // updateList: (listId: number) => TMDB.get(`4/list/${listId}`),
-
   getCollection: (): Promise<AxiosResponse<MovieCollection[]>> =>
     TRAKT.get(`sync/collection/movies`),
 
@@ -92,11 +96,10 @@ export const API = {
   removeMovieFromList: ({
     movieId,
     listId,
-  }: ListMovieInput): Promise<AxiosResponse<RemoveListItemsResponse>> => {
-    return TRAKT.post(`users/${ACCOUNT_ID}/lists/${listId}/items/remove`, {
+  }: ListMovieInput): Promise<AxiosResponse<RemoveListItemsResponse>> =>
+    TRAKT.post(`users/${ACCOUNT_ID}/lists/${listId}/items/remove`, {
       movies: [{ ids: { tmdb: movieId } }],
-    });
-  },
+    }),
 
   search: (query: string): Promise<AxiosResponse<SearchResponse>> =>
     TMDB.get('3/search/movie', {
@@ -112,10 +115,8 @@ export const API = {
   deleteLists: (listId: number): Promise<AxiosResponse> =>
     TRAKT.delete(`users/${ACCOUNT_ID}/lists/${listId}`),
 
-  getStats: (): Promise<AxiosResponse<UserSettings>> => {
-    console.log(TRAKT.defaults);
-    return TRAKT.get('users/settings');
-  },
+  getStats: (): Promise<AxiosResponse<UserSettings>> =>
+    TRAKT.get('users/settings'),
 
   getWatchProviders: (): Promise<AxiosResponse<WatchProviderResponse>> =>
     TMDB.get('3/watch/providers/movie', {
