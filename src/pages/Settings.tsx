@@ -8,22 +8,20 @@ import {
   Space,
   Stack,
   Title,
-} from '@mantine/core';
-import React from 'react';
-import uuid from 'react-uuid';
-import { TitleNav } from '../components';
+} from "@mantine/core";
+import uuid from "react-uuid";
+import { TitleNav } from "../components";
 
-import useStore from '../store';
-import './Settings.scss';
+import useStore from "../store";
+import "./Settings.scss";
 
 function Settings() {
   const providers = useStore((state) => state.providers);
   const setProviders = useStore((state) => state.setProviders);
   const handleLogout = () => {
-    console.log('logout');
-    localStorage.setItem('access_token', null);
-    localStorage.setItem('user_id', null);
-    window.location.replace('/login');
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user_id");
+    window.location.replace("/login");
   };
 
   const list = providers.map((e, i) => (
@@ -62,7 +60,7 @@ function Settings() {
           my="xs"
           label="My Providers"
           labelPosition="center"
-          labelProps={{ size: 'xl' }}
+          labelProps={{ size: "xl" }}
         />
         <Stack>{list}</Stack>
       </Container>

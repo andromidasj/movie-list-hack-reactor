@@ -6,57 +6,60 @@ import {
   Group,
   Space,
 } from '@mantine/core';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { GearWideConnected, PlusLg } from 'react-bootstrap-icons';
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 
-import useStore from '../store.js';
-import API from '../util/api.js';
+import useStore from '../store';
+import { API } from '../util/api';
 import './Lists.scss';
 
 function Lists() {
-  useEffect(() => {
-    API.getStats().catch(() => {
-      window.location.replace('/login');
-    });
-  }, []);
-
   const navigate = useNavigate();
-
-  // Default Zustand to 'toWatch' tab when lists load
   const setTab = useStore((state) => state.setTab);
   const setSearchQuery = useStore((state) => state.setSearchQuery);
   setTab('toWatch');
   setSearchQuery('');
 
-  const {
-    data: lists,
+  useEffect(() => {
+    API.getStats()
+      .then((res) => console.log(res))
+      .catch(() => {
+        window.location.replace('/login');
+      });
+  }, []);
+
+  const { data, isLoading, isError } = useQuery('lists', API.getLists);
+  console.log('🚀 ~ Lists ~ { data, isLoading, isError }', {
+    data,
     isLoading,
     isError,
-    error,
-  } = useQuery('lists', API.getLists);
+  });
 
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
+  if (isLoading) return <h1>Loading...</h1>;
 
   if (isError) {
     navigate('/login');
   }
 
-  let listInfoArray = [];
-  const watched = lists.data.filter((list) => list.name.startsWith('__'));
-  const watchList = lists.data.filter((list) => !list.name.startsWith('__'));
+  const lists = data!.data;
+  console.log('🚀 ~ Lists ~ lists', lists);
+
+  // TODO: specify type
+  let listInfoArray: any = [];
+
+  const watched = lists.filter((list) => list.name.startsWith('__'));
+  const watchList = lists.filter((list) => !list.name.startsWith('__'));
 
   watchList.forEach((list) => {
     const b = watched.find((watched) => watched.name === `__${list.name}`);
     if (b) {
       listInfoArray.push([
         list.ids.trakt,
-        b?.ids.trakt,
+        b.ids.trakt,
         list.name,
-        list.item_count,
+        list.itemCount,
       ]);
     }
   });
@@ -91,8 +94,8 @@ function Lists() {
       {/* <div className="lists-container"> */}
       <Space h="xl" />
       <Container px="xl">
-        <Group grow direction="column">
-          {listInfoArray.map((listInfoItem, i) => (
+        <Group grow>
+          {listInfoArray.map((listInfoItem: any, i: number) => (
             <Button
               component={Link}
               to={`/list?list=${listInfoItem[0]}&watched=${listInfoItem[1]}&name=${listInfoItem[2]}`}

@@ -1,13 +1,13 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from 'react-router-dom';
 
-import "./App.scss";
-import Lists from "./pages/Lists.jsx";
-import ListStats from "./pages/ListStats.jsx";
-import Login from "./pages/Login.jsx";
-import MovieDetails from "./pages/MovieDetails.jsx";
-import NewList from "./pages/NewList.jsx";
-import SelectedList from "./pages/SelectedList.jsx";
-import Settings from "./pages/Settings.jsx";
+import './App.scss';
+import Lists from './pages/Lists';
+import ListStats from './pages/ListStats';
+import Login from './pages/Login';
+import MovieDetails from './pages/MovieDetails';
+import NewList from './pages/NewList';
+import SelectedList from './pages/SelectedList';
+import Settings from './pages/Settings';
 
 function App() {
   return (

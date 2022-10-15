@@ -1,12 +1,11 @@
 import { Button, Group, Modal, Space, Table, Text, Title } from '@mantine/core';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { Trash } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
-
-import { Trash } from 'react-bootstrap-icons';
 import { TitleNav } from '../components';
-import API from '../util/api';
+import { API } from '../util/api';
 import './ListStats.scss';
 
 function ListStats() {
@@ -19,9 +18,9 @@ function ListStats() {
   const [modalOpened, setModalOpened] = useState(false);
   const deleteList = useMutation(API.deleteLists);
 
-  const list = useQuery(['listInfo', listId], () => API.getListInfo(listId));
+  const list = useQuery(['listInfo', listId], () => API.getListInfo(+listId!));
   const watched = useQuery(['listInfo', watchedId], () =>
-    API.getListInfo(watchedId)
+    API.getListInfo(+watchedId!)
   );
 
   const detailsData = [
@@ -38,27 +37,23 @@ function ListStats() {
   const statsData = [
     {
       title: 'Watched Movies',
-      value: watched.data?.data.item_count,
+      value: watched.data?.data.itemCount,
     },
     {
       title: 'Movies left to watch',
-      value: list.data?.data.item_count,
+      value: list.data?.data.itemCount,
     },
   ];
 
   const handleListDelete = () => {
     // console.log('DELETING LISTS...');
     [listId, watchedId].forEach((list) => {
-      deleteList.mutate(list, {
-        onSuccess: (data, error, variables, context) => {
-          // console.log(data, error, variables, context);
+      deleteList.mutate(+list!, {
+        onSuccess: () => {
           navigate('/');
         },
         onError: (data) => {
           console.log(data);
-        },
-        onSettled: () => {
-          // console.log('Settled.');
         },
       });
     });
@@ -75,13 +70,13 @@ function ListStats() {
           }}
           title="Are you sure?"
         >
-          <Text order={2}>
+          <Title order={2}>
             <Text color="red" weight="bold" inherit component="span">
               Deleting
             </Text>{' '}
             this list will permanently delete all list data. Are you sure you
             want to continue?
-          </Text>
+          </Title>
           <Space h="lg" />
           <Group grow>
             <Button

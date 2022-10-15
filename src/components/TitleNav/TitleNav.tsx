@@ -1,11 +1,15 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, BarChartFill } from 'react-bootstrap-icons';
-import { ActionIcon, Space } from '@mantine/core';
+import { ActionIcon } from "@mantine/core";
+import { BarChartFill, ChevronLeft } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
 
-import './TitleNav.scss';
+import "./TitleNav.scss";
 
-function TitleNav({ title, back, backName = '', info = false }) {
+interface TitleNavProps {
+  title: string;
+  info?: boolean;
+}
+
+function TitleNav({ title, info = false }: TitleNavProps) {
   const navigate = useNavigate();
 
   return (

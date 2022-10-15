@@ -1,15 +1,18 @@
 import { Container, SimpleGrid, Space } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import React from 'react';
 import { useQuery } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import { MovieCard } from '../../components';
 import useStore from '../../store';
-import API from '../../util/api';
+import { API } from '../../util/api';
 import './Search.scss';
 
-function Search({ listName }) {
+interface SearchProps {
+  listName: string;
+}
+
+function Search({ listName }: SearchProps) {
   const [searchParams] = useSearchParams();
   const listId = searchParams.get('list');
   const watchedId = searchParams.get('watched');
@@ -35,17 +38,18 @@ function Search({ listName }) {
     <>
       {data && (
         <>
-          <Space h="14vh" />
+          {/* TODO: change to vh:14 */}
+          <Space h={50} />
           <Space h="sm" />
           <Container>
             <SimpleGrid cols={3}>
               {data.data.results.map((movie) => {
-                if (movie.poster_path) {
+                if (movie.posterPath) {
                   return (
                     <MovieCard
-                      tmdb_id={movie.id}
+                      tmdbId={movie.id}
                       title={movie.title}
-                      year={movie.release_date?.substring(0, 4)}
+                      year={movie.releaseDate?.substring(0, 4)}
                       list={listId}
                       watched={watchedId}
                       key={uuid()}

@@ -8,16 +8,36 @@ import {
 } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 
-import API from '../util/api';
+import { API, TRAKT } from '../util/api';
+
+const REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob';
 
 function Login() {
+  const [clickedLogin, setClickedLogin] = useState(false);
+  const [code, setCode] = useState('');
+  console.log('🚀 ~ Login ~ code', code);
+  const [error, setError] = useState<React.ReactElement | null>(null);
+
+  const [, setToken] = useLocalStorage({
+    key: 'access_token',
+  });
+  const [, setUsername] = useLocalStorage({
+    key: 'user_id',
+  });
+
+  const settings = useQuery(['settings'], () => {
+    TRAKT.get('https://api.trakt.tv/users/settings');
+  });
+  console.log('🚀 ~ Lists ~ settings', settings);
+
+  // TODO: replace window with useNavigation()
   useEffect(() => {
     API.getStats()
       .then((response) => {
-        // console.log('🚀 ~ useEffect ~ response', response);
+        console.log('🚀 ~ useEffect ~ response', response);
         window.location.replace('/');
       })
       .catch((err) => {
@@ -25,33 +45,11 @@ function Login() {
       });
   }, []);
 
-  const [clickedLogin, setClickedLogin] = useState(false);
-  const [code, setCode] = useState('');
-  const [error, setError] = useState(null);
-
-  const navigate = useNavigate();
-  const [token, setToken] = useLocalStorage({
-    key: 'access_token',
-    defaultValue: null,
-    serialize: (value) => value,
-  });
-  const [username, setUsername] = useLocalStorage({
-    key: 'user_id',
-    defaultValue: null,
-    serialize: (value) => value,
-  });
-
-  // console.log('🚀 ~ Login ~ username', username);
-  // console.log('🚀 ~ Login ~ token', token);
-
   const authRedirect = () => {
     const authUrl = new URL('https://trakt.tv/oauth/authorize');
     authUrl.searchParams.set('response_type', 'code');
-    authUrl.searchParams.set(
-      'client_id',
-      '6847dcfb3fe1227b3cf32efec4fb7876e0f08f5d99fb4aeb978e577d7aafb59c'
-    );
-    authUrl.searchParams.set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
+    authUrl.searchParams.set('client_id', process.env.REACT_APP_TRAKT_API_KEY!);
+    authUrl.searchParams.set('redirect_uri', REDIRECT_URI);
 
     window.open(authUrl);
     setClickedLogin(true);
@@ -60,9 +58,9 @@ function Login() {
   const handleAuth = async () => {
     const obj = {
       code: code,
-      client_id: process.env.TRAKT_API_KEY,
-      client_secret: process.env.TRAKT_SECRET,
-      redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+      client_id: process.env.REACT_APP_TRAKT_API_KEY,
+      client_secret: process.env.REACT_APP_TRAKT_SECRET,
+      redirect_uri: REDIRECT_URI,
       grant_type: 'authorization_code',
     };
 
@@ -76,14 +74,14 @@ function Login() {
           },
         }
       );
-      // console.log('🚀 ~ handleAuth ~ response', response);
+      console.log('🚀 ~ handleAuth ~ response', response);
       setToken(response.data.access_token);
 
       const userInfo = await axios.get('https://api.trakt.tv/users/settings', {
         headers: {
           'content-type': 'application/json',
           'trakt-api-version': '2',
-          'trakt-api-key': process.env.TRAKT_API_KEY,
+          'trakt-api-key': process.env.REACT_APP_TRAKT_API_KEY!,
           Authorization: `Bearer ${response.data.access_token}`,
         },
       });
@@ -93,7 +91,7 @@ function Login() {
 
       window.location.replace('/');
     } catch (err) {
-      setError(<p>{err}</p>);
+      setError(<p>{JSON.stringify(err)}</p>);
     }
   };
 

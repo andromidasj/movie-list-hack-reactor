@@ -3,41 +3,32 @@ import {
   BookmarkFill,
   CheckCircle,
   CheckCircleFill,
-} from "react-bootstrap-icons";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useParams, useSearchParams } from "react-router-dom";
-import API from "../../util/api.js";
-import "./ListActions.scss";
+} from 'react-bootstrap-icons';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { API } from '../../util/api';
+import './ListActions.scss';
 
 function ListActions() {
   const { movieId } = useParams();
   const [searchParams] = useSearchParams();
-  const listId = searchParams.get("list");
-  const watchedId = searchParams.get("watched");
-  const name = searchParams.get("name");
+  const listId = searchParams.get('list');
+  const watchedId = searchParams.get('watched');
+  const name = searchParams.get('name');
   const queryClient = useQueryClient();
 
-  const {
-    data: list,
-    isLoading: isLoadingList,
-    isError: isErrorList,
-    error: errorList,
-  } = useQuery(["list", listId], () => API.getListItems(listId));
+  // TODO: If no movieId, redirect
 
-  const {
-    data: watched,
-    isLoading: isLoadingWatched,
-    isError: isErrorWatched,
-    error: errorWatched,
-  } = useQuery(["list", watchedId], () => API.getListItems(watchedId));
+  const getList = useQuery(['list', listId], () => API.getListItems(+listId!));
 
-  // console.log('~ListActions~ list', list);
-  // console.log('~ListActions~ watched', watched);
+  const getWatched = useQuery(['list', watchedId], () =>
+    API.getListItems(+watchedId!)
+  );
 
   const invalidateQueriesOnSuccess = {
     onSuccess: () => {
-      queryClient.invalidateQueries(["list", listId]);
-      queryClient.invalidateQueries(["list", watchedId]);
+      queryClient.invalidateQueries(['list', listId]);
+      queryClient.invalidateQueries(['list', watchedId]);
     },
   };
 
@@ -47,7 +38,7 @@ function ListActions() {
     invalidateQueriesOnSuccess
   );
 
-  if (isLoadingList || isLoadingWatched) {
+  if (getList.isLoading || getWatched.isLoading) {
     return (
       <div className="md-list-actions-container">
         <div className="md-list-action">
@@ -62,14 +53,14 @@ function ListActions() {
     );
   }
 
-  if (isErrorList || isErrorWatched) {
-    return <h1>{`Error ${errorList || errorWatched}`}</h1>;
+  if (getList.isError || getWatched.isError) {
+    return <h1>{`Error ${getList.error || getWatched.error}`}</h1>;
   }
 
-  const inList = list!.data.find(
+  const inList = getList.data!.data.find(
     (movie) => movie.movie.ids.tmdb === Number(movieId)
   );
-  const inWatched = watched!.data.find(
+  const inWatched = getWatched.data!.data.find(
     (movie) => movie.movie.ids.tmdb === Number(movieId)
   );
 
@@ -81,7 +72,7 @@ function ListActions() {
           <div
             className="md-list-action"
             onClick={() => {
-              removeMovie.mutate({ movieId, listId });
+              removeMovie.mutate({ movieId: +movieId!, listId: +listId! });
             }}
           >
             <BookmarkFill className="action-icon" />
@@ -91,7 +82,7 @@ function ListActions() {
           <div
             className="md-list-action"
             onClick={() => {
-              addMovie.mutate({ movieId, listId });
+              addMovie.mutate({ movieId: +movieId!, listId: +listId! });
             }}
           >
             <Bookmark className="action-icon" />
@@ -102,7 +93,7 @@ function ListActions() {
           <div
             className="md-list-action"
             onClick={() => {
-              removeMovie.mutate({ movieId, listId: watchedId });
+              removeMovie.mutate({ movieId: +movieId!, listId: +watchedId! });
             }}
           >
             <CheckCircleFill className="action-icon" />
@@ -112,7 +103,7 @@ function ListActions() {
           <div
             className="md-list-action"
             onClick={() => {
-              addMovie.mutate({ movieId, listId: watchedId });
+              addMovie.mutate({ movieId: +movieId!, listId: +watchedId! });
             }}
           >
             <CheckCircle className="action-icon" />

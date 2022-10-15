@@ -1,13 +1,12 @@
-import { MantineProvider } from "@mantine/core";
-import { createRoot } from "react-dom/client";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { BrowserRouter } from "react-router-dom";
-
-import App from "./App.js";
-import "./index.scss";
+import { MantineProvider } from '@mantine/core';
+import { createRoot } from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+import './index.scss';
 
 const container =
-  document.getElementById("root") || document.createElement("div");
+  document.getElementById('root') || document.createElement('div');
 const root = createRoot(container);
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,7 +22,7 @@ root.render(
     <BrowserRouter>
       <MantineProvider
         theme={{
-          colorScheme: "dark",
+          colorScheme: 'dark',
         }}
         withNormalizeCSS
         withGlobalStyles

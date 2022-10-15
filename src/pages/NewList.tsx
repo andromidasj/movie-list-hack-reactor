@@ -8,46 +8,42 @@ import {
   TextInput,
   Transition,
 } from '@mantine/core';
-import React, { useState } from 'react';
+import { useInputState, useToggle } from '@mantine/hooks';
+import { useState } from 'react';
 import { ExclamationCircle } from 'react-bootstrap-icons';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-
 import { TitleNav } from '../components';
-import API from '../util/api';
+import { API } from '../util/api';
 import './NewList.scss';
 
 function NewList() {
-  const [name, setName] = useState('');
-  const [desc, setDesc] = useState('');
-  const [privateList, setPrivateList] = useState(true);
-  const [errorAlert, setErrorAlert] = useState(false);
+  const [name, setName] = useInputState('');
+  const [description, setDescription] = useInputState('');
+  const [privacy, togglePrivacy] = useToggle(['public', 'private'] as const);
+  const [errorAlert, setErrorAlert] = useState<boolean>(false);
 
   const mutation = useMutation(API.newList, {
     onSuccess: (data) => {
       console.log('Successfully created list', data);
     },
-    retry: 3,
+    // retry: 3,
   });
-
-  const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  console.log('🚀 ~ NewList ~ darkTheme?', darkThemeMq);
 
   const navigate = useNavigate();
 
   const handleSubmit = () => {
     const watchedName = '__' + name;
-    const watchlist = { name, desc, privateList };
+    const watchlist = { name, description, privacy };
     const watched = {
       name: watchedName,
-      desc: `Accompanying watched list for "${name}".\n`,
-      privateList,
+      description: `Accompanying watched list for "${name}".\n`,
+      privacy,
     };
 
     [watchlist, watched].forEach((list) => {
       mutation.mutate(list, {
         onSuccess: () => {
-          console.log('Done!');
           navigate('/', { replace: true });
         },
         onError: (error) => {
@@ -60,7 +56,7 @@ function NewList() {
 
   return (
     <>
-      <TitleNav title="New List" back="/" />
+      <TitleNav title="New List" />
       <Transition
         mounted={errorAlert}
         transition="slide-down"
@@ -92,24 +88,22 @@ function NewList() {
           size="lg"
           required
           autoComplete="off"
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
+          onChange={setName}
         />
         <Textarea
           placeholder="Optional description"
           radius="lg"
           size="lg"
           autoComplete="off"
-          onChange={(e) => {
-            setDesc(e.target.value);
-          }}
+          onChange={setDescription}
         />
         <Switch
-          checked={privateList}
+          checked={privacy === 'private'}
           label="Private list"
           size="xl"
-          onChange={(event) => setPrivateList(event.currentTarget.checked)}
+          onChange={() => {
+            togglePrivacy();
+          }}
           color="green"
         />
         <Center>

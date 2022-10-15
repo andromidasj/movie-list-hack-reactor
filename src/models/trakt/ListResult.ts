@@ -1,7 +1,5 @@
-export interface ListId {
-  trakt: number;
-  slug: string;
-}
+import { TraktId } from "./TraktId";
+import { User } from "./User";
 
 export interface ListResult {
   name: string;
@@ -17,19 +15,6 @@ export interface ListResult {
   itemCount: number;
   commentCount: number;
   likes: number;
-  ids: ListId;
+  ids: TraktId;
   user?: User;
-}
-
-export interface Ids2 {
-  slug: string;
-}
-
-export interface User {
-  username: string;
-  private: boolean;
-  name: string;
-  vip: boolean;
-  vipEp: boolean;
-  ids: Ids2;
 }

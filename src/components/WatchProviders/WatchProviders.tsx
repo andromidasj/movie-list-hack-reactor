@@ -1,8 +1,3 @@
-import React from 'react';
-import { CollectionPlay } from 'react-bootstrap-icons';
-import { useQuery } from 'react-query';
-import uuid from 'react-uuid';
-
 import {
   Container,
   Group,
@@ -12,23 +7,33 @@ import {
   Text,
   ThemeIcon,
 } from '@mantine/core';
+import { CollectionPlay } from 'react-bootstrap-icons';
+import { useQuery } from 'react-query';
+import uuid from 'react-uuid';
 import useStore from '../../store';
-import API from '../../util/api';
+import { API } from '../../util/api';
 import './WatchProviders.scss';
 
-function WatchProviders({ providers, title }) {
-  const { data, isLoading } = useQuery('collection', API.getCollection);
-  const collected = data?.data?.find((e) => e.movie.title === title);
+interface WatchProvidersProps {
+  providers: any;
+  title: any;
+}
+
+function WatchProviders({ providers, title }: WatchProvidersProps) {
+  // TODO: Add isLoading & isError
+  const { data } = useQuery('collection', API.getCollection);
+
+  const collected = data?.data?.find((e: any) => e.movie.title === title);
 
   const myProviders = useStore((state) => state.providers)
     .filter((e) => e.active)
     .map((e) => e.name);
 
   const URL = 'https://image.tmdb.org/t/p/original';
-  const plexURL =
-    'https://styles.redditmedia.com/t5_2ql7e/styles/communityIcon_qe11it6wwbw81.png';
+  // const plexURL =
+  // 'https://styles.redditmedia.com/t5_2ql7e/styles/communityIcon_qe11it6wwbw81.png';
 
-  const filteredProviders = providers?.flatrate?.filter((provider) =>
+  const filteredProviders = providers?.flatrate?.filter((provider: any) =>
     myProviders.includes(provider.provider_name)
   );
 
@@ -40,7 +45,7 @@ function WatchProviders({ providers, title }) {
   };
 
   const providersArr =
-    filteredProviders?.map((provider) => (
+    filteredProviders?.map((provider: any) => (
       <Container style={containerStyle} key={uuid()}>
         <Group noWrap key={uuid()} position="apart">
           <Image

@@ -6,23 +6,30 @@ import {
   Stack,
   Title,
 } from '@mantine/core';
-import React from 'react';
 import { Film } from 'react-bootstrap-icons';
 import uuid from 'react-uuid';
-
 import arrow from '../../assets/arrow.png';
 import { MovieCard } from '../../components';
 import './Movies.scss';
 
-function Movies({ movies, list, watched, listName }) {
+interface MoviesProps {
+  // TODO: specify types
+  movies: any;
+  list: any;
+  watched: any;
+  listName: string;
+}
+
+function Movies({ movies, list, watched, listName }: MoviesProps) {
   if (!movies) {
     return <h3>Loading...</h3>;
   }
 
   // console.log('creating movieCards array...');
-  const movieCards = movies.map((movie) => (
+  // TODO: specify type
+  const movieCards = movies.map((movie: any) => (
     <MovieCard
-      tmdb_id={movie.movie.ids.tmdb}
+      tmdbId={movie.movie.ids.tmdb}
       title={movie.movie.title}
       year={movie.movie.year}
       list={list}
@@ -37,13 +44,14 @@ function Movies({ movies, list, watched, listName }) {
     <>
       {movies.length ? (
         <>
-          <Space h="14vh" />
+          {/* TODO: was h="14vh" */}
+          <Space h={50} />
           <Space h="sm" />
           <Container>
             <SimpleGrid cols={3} spacing="sm">
               {movieCards}
             </SimpleGrid>
-            <Space h="14vh" />
+            <Space h={50} />
           </Container>
         </>
       ) : (

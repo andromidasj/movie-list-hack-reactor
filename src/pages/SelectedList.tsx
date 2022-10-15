@@ -1,21 +1,20 @@
 import { Alert, Loader } from '@mantine/core';
 import _ from 'lodash';
-import React from 'react';
 import { ExclamationCircle } from 'react-bootstrap-icons';
 import { useQuery } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
-
 import { SearchBar, Tabs, TitleNav } from '../components';
-import { Movies, Search } from '../containers';
+import Movies from '../containers/Movies/Movies';
+import Search from '../containers/Search/Search';
 import useStore from '../store';
-import API from '../util/api.js';
+import { API } from '../util/api';
 
 function SelectedList() {
-  // console.log('RENDER SelectedList');
   const [searchParams] = useSearchParams();
   const listId = searchParams.get('list');
   const watchedId = searchParams.get('watched');
-  const name = searchParams.get('name');
+  // TODO: If params are missing, redirect (then remove !)
+  const name = searchParams.get('name')!;
 
   const searchQuery = useStore((state) => state.searchQuery);
   const tab = useStore((state) => state.tab);
@@ -24,8 +23,7 @@ function SelectedList() {
     data: list,
     isLoading: isLoadingList,
     isError: isErrorList,
-    // error: errorList,
-  } = useQuery(['listItems', listId], () => API.getListItems(listId), {
+  } = useQuery(['listItems', listId], () => API.getListItems(+listId!), {
     staleTime: 1000 * 60 * 60,
   });
 
@@ -33,8 +31,7 @@ function SelectedList() {
     data: watched,
     isLoading: isLoadingWatched,
     isError: isErrorWatched,
-    // error: errorWatched,
-  } = useQuery(['listItems', watchedId], () => API.getListItems(watchedId), {
+  } = useQuery(['listItems', watchedId], () => API.getListItems(+watchedId!), {
     staleTime: 1000 * 60 * 60,
   });
 
@@ -42,7 +39,7 @@ function SelectedList() {
     return (
       <>
         <div className="sl-top-bar-container">
-          <TitleNav title={name} />
+          <TitleNav title={name!} />
         </div>
         <Alert
           icon={<ExclamationCircle size={16} />}
@@ -64,19 +61,18 @@ function SelectedList() {
     ),
     'listed_at'
   );
-  // console.log('🚀 ~ SelectedList ~ listFiltered', listFiltered);
+
   const watchedFiltered = _.orderBy(
     watched?.data.filter((movie) =>
       movie.movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     ),
     'listed_at'
   );
-  // console.log('🚀 ~ SelectedList ~ watchedFiltered', watchedFiltered);
 
   return (
     <>
       <div className="sl-top-bar-container">
-        <TitleNav title={name} info />
+        <TitleNav title={name!} info />
         <SearchBar />
       </div>
 
