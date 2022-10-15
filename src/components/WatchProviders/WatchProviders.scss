@@ -1,0 +1,39 @@
+.watch-providers-container {
+  margin-bottom: 100px;
+}
+
+.watch-providers-list {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.watch-provider {
+  width: 60vw;
+  height: 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: #000;
+  align-items: center;
+  border-radius: 15px;
+  padding: 12px 10px 12px 0;
+  margin: 10px;
+  color: white;
+  text-decoration: none;
+  justify-items: center;
+}
+
+.wp-logo, .wp-logo-collected {
+  height: 60px;
+  width: 60px;
+  border-radius: 10px;
+}
+
+.wp-logo-collected {
+  padding: 10px;
+}
+
+.wp-provider-title {
+  text-align: center;
+}

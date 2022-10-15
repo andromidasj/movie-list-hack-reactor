@@ -1,0 +1,15 @@
+#new-list-page {
+  height: 100%;
+  overflow: hidden;
+}
+
+.new-list-container {
+  margin-top: 7vh !important;
+  padding: 15px !important;
+}
+
+.error-notification {
+  position: absolute;
+  top: 7vh;
+  z-index: 10;
+}
