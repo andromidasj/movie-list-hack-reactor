@@ -61,7 +61,6 @@ function SelectedList() {
     ),
     'listed_at'
   );
-  console.log('🚀 ~ SelectedList ~ listFiltered', listFiltered);
 
   const watchedFiltered = _.orderBy(
     watched?.data.filter((movie) =>

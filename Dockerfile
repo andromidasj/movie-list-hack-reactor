@@ -10,4 +10,5 @@ COPY . .
 
 RUN yarn install
 
-CMD [ "node", "server/index.js" ]
+# CMD [ "node", "server/index.js" ]
+CMD serve -s build
