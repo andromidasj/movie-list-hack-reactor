@@ -2,9 +2,7 @@ import { Button, Checkbox, Divider, Group, Stack, Title } from '@mantine/core';
 import uuid from 'react-uuid';
 import { TitleNav } from '../components';
 import { LocalStorage } from '../models/enums/LocalStorageKeys';
-
 import useStore from '../store';
-import './Settings.scss';
 
 function Settings() {
   const providers = useStore((state) => state.providers);
