@@ -26,9 +26,7 @@ function MovieCard({
   watched,
   listName,
 }: MovieCardProps) {
-  const { ref, entry } = useIntersection({
-    threshold: 0,
-  });
+  const { ref, entry } = useIntersection({ threshold: 0 });
 
   const { data } = useQuery(['movie', tmdbId], () => API.getMovieInfo(tmdbId), {
     enabled: !!entry?.isIntersecting,
@@ -36,7 +34,7 @@ function MovieCard({
 
   if (data) {
     const movie = data!.data;
-    const pathname = urlJoin('/movie', movie?.id.toString());
+    const pathname = urlJoin('/movie', movie.id.toString());
     const search = createSearchParams({
       list,
       watched,
@@ -60,7 +58,9 @@ function MovieCard({
           align="center"
           size="xs"
           py={5}
-        >{`${title} (${year})`}</Text>
+        >
+          {title} ({year})
+        </Text>
       </Link>
     );
   }
@@ -73,7 +73,6 @@ function MovieCard({
         alt="With default placeholder"
         withPlaceholder
         height={167}
-        fit="cover"
       />
     </AspectRatio>
   );

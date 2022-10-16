@@ -4,15 +4,14 @@ import { devtools, persist } from 'zustand/middleware';
 import { Provider } from './models/Provider';
 
 const providers: Provider[] = [
-  { name: 'Netflix', active: true },
-  { name: 'Amazon Prime Video', active: true },
-  { name: 'Disney Plus', active: true },
-  { name: 'HBO Max', active: false },
-  { name: 'Apple TV Plus', active: false },
-  { name: 'Hulu', active: false },
-  { name: 'Paramount Plus', active: false },
-  { name: 'Plex', active: false },
-  { name: 'Starz', active: false },
+  { name: 'Netflix', active: true, providerId: 8 },
+  { name: 'Amazon Prime Video', active: true, providerId: 9 },
+  { name: 'Disney Plus', active: true, providerId: 337 },
+  { name: 'HBO Max', active: false, providerId: 384 },
+  { name: 'Apple TV Plus', active: false, providerId: 350 },
+  { name: 'Hulu', active: false, providerId: 15 },
+  { name: 'Paramount Plus', active: false, providerId: 531 },
+  { name: 'Starz', active: false, providerId: 43 },
 ];
 
 const store = (set: any, get: any) => ({

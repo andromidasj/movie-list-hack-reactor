@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import { Container, SimpleGrid } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useQuery } from '@tanstack/react-query';

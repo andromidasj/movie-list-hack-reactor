@@ -2,6 +2,7 @@ import { Avatar, Spoiler } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import uuid from 'react-uuid';
+import urlJoin from 'url-join';
 import { ListActions, TitleNav, WatchProviders } from '../components';
 import { API } from '../util/api';
 import parseMovieDetails from '../util/parseMovieDetails';
@@ -33,6 +34,7 @@ function MovieDetails() {
   if (isError) return <p>{JSON.stringify(error)}</p>;
 
   const movie = data!.data;
+
   const { runtime, genres, mpaaRating, trailerLink, video, actorArr } =
     parseMovieDetails(data!.data);
 
@@ -72,8 +74,11 @@ function MovieDetails() {
               <Avatar
                 src={
                   actor
-                    ? `https://image.tmdb.org/t/p/w342${actor.profilePath}`
-                    : ''
+                    ? urlJoin(
+                        'https://image.tmdb.org/t/p/w342',
+                        actor.profilePath || ''
+                      )
+                    : null
                 }
                 className="actor-avatar"
                 radius="xl"
@@ -86,7 +91,7 @@ function MovieDetails() {
         </div>
 
         <WatchProviders
-          providers={movie.watchProviders.results.us}
+          providers={movie.watchProviders.results.us.flatrate}
           title={movie.title}
         />
       </div>

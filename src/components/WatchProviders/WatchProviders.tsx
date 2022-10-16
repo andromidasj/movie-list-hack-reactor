@@ -2,6 +2,7 @@ import {
   Container,
   Group,
   Image,
+  Loader,
   Space,
   Stack,
   Text,
@@ -10,50 +11,59 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { CollectionPlay } from 'react-bootstrap-icons';
 import uuid from 'react-uuid';
+import { Flatrate } from '../../models/tmdb/TmdbMovie';
+import { MovieCollection } from '../../models/trakt/MovieCollection';
 import useStore from '../../store';
 import { API } from '../../util/api';
 import './WatchProviders.scss';
 
 interface WatchProvidersProps {
-  providers: any;
-  title: any;
+  providers?: Flatrate[];
+  title: string;
 }
+
+const containerStyle = {
+  width: '70vw',
+  backgroundColor: '#000',
+  borderRadius: 15,
+  padding: 10,
+};
 
 const URL = 'https://image.tmdb.org/t/p/original';
 
 function WatchProviders({ providers, title }: WatchProvidersProps) {
-  // TODO: Add isLoading & isError
-  const { data } = useQuery(['collection'], API.getCollection);
-
-  const collected = data?.data?.find((e: any) => e.movie.title === title);
-
   const myProviders = useStore((state) => state.providers)
     .filter((e) => e.active)
     .map((e) => e.name);
 
-  const filteredProviders = providers?.flatrate?.filter((provider: any) =>
-    myProviders.includes(provider.provider_name)
+  const { data, isError, isLoading } = useQuery(
+    ['collection'],
+    API.getCollection
   );
 
-  const containerStyle = {
-    width: '70vw',
-    backgroundColor: '#000',
-    borderRadius: 15,
-    padding: 10,
-  };
+  if (isLoading || isError) return <Loader />;
+
+  const collected = data.data.find(
+    (collected: MovieCollection) => collected.movie.title === title
+  );
+
+  const filteredProviders =
+    providers?.filter((provider: Flatrate) =>
+      myProviders.includes(provider.providerName)
+    ) || [];
 
   const providersArr =
-    filteredProviders?.map((provider: any) => (
+    filteredProviders.map((provider: any) => (
       <Container style={containerStyle} key={uuid()}>
-        <Group noWrap key={uuid()} position="apart">
+        <Group noWrap position="apart" key={uuid()}>
           <Image
-            src={URL + provider.logo_path}
+            src={URL + provider.logoPath}
             radius="md"
             height={50}
             width={50}
           />
           <Container>
-            <Text align="center">{provider.provider_name}</Text>
+            <Text align="center">{provider.providerName}</Text>
           </Container>
         </Group>
       </Container>
@@ -79,7 +89,7 @@ function WatchProviders({ providers, title }: WatchProvidersProps) {
       <h2>Available on</h2>
       <Space h="lg" />
       <Stack>
-        {providersArr?.length ? (
+        {providersArr.length ? (
           providersArr
         ) : (
           <Text>Not Available On Your Services</Text>

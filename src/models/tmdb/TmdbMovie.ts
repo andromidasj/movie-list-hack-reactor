@@ -164,7 +164,7 @@ interface WPResults {
   us: Us;
 }
 
-interface Us {
+export interface Us {
   link: string;
   rent: Rent[];
   buy: Buy[];
@@ -172,22 +172,22 @@ interface Us {
 }
 
 interface Rent {
-  logo_path: string;
-  provider_id: number;
-  provider_name: string;
-  display_priority: number;
+  logoPath: string;
+  providerId: number;
+  providerName: string;
+  displayPriority: number;
 }
 
 interface Buy {
-  logo_path: string;
-  provider_id: number;
-  provider_name: string;
-  display_priority: number;
+  logoPath: string;
+  providerId: number;
+  providerName: string;
+  displayPriority: number;
 }
 
-interface Flatrate {
-  logo_path: string;
-  provider_id: number;
-  provider_name: string;
-  display_priority: number;
+export interface Flatrate {
+  logoPath: string;
+  providerId: number;
+  providerName: string;
+  displayPriority: number;
 }
