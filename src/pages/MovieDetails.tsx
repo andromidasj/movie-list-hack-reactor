@@ -1,5 +1,5 @@
 import { Avatar, Spoiler } from '@mantine/core';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import { ListActions, TitleNav, WatchProviders } from '../components';

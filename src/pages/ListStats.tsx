@@ -1,7 +1,7 @@
 import { Button, Group, Modal, Space, Table, Text, Title } from '@mantine/core';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Trash } from 'react-bootstrap-icons';
-import { useMutation, useQuery } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import { TitleNav } from '../components';

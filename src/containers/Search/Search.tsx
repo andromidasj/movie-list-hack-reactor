@@ -1,6 +1,6 @@
 import { Container, SimpleGrid } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import { MovieCard } from '../../components';

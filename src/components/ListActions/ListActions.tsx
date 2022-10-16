@@ -1,10 +1,10 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Bookmark,
   BookmarkFill,
   CheckCircle,
   CheckCircleFill,
 } from 'react-bootstrap-icons';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { API } from '../../util/api';
 import './ListActions.scss';

@@ -1,7 +1,7 @@
 import { Alert, Loader } from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
 import { ExclamationCircle } from 'react-bootstrap-icons';
-import { useQuery } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
 import { SearchBar, Tabs, TitleNav } from '../components';
 import Movies from '../containers/Movies/Movies';
@@ -61,6 +61,7 @@ function SelectedList() {
     ),
     'listed_at'
   );
+  console.log('🚀 ~ SelectedList ~ listFiltered', listFiltered);
 
   const watchedFiltered = _.orderBy(
     watched?.data.filter((movie) =>

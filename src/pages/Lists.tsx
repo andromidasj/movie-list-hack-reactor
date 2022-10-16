@@ -6,8 +6,8 @@ import {
   Group,
   Stack,
 } from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
 import { GearWideConnected, PlusLg } from 'react-bootstrap-icons';
-import { useQuery } from 'react-query';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import useStore from '../store';
 import { API } from '../util/api';
@@ -34,7 +34,7 @@ function Lists() {
   setTab('toWatch');
   setSearchQuery('');
 
-  const { data, isLoading, isError } = useQuery('lists', API.getLists);
+  const { data, isLoading, isError } = useQuery(['lists'], API.getLists);
 
   if (isLoading) return <h1>Loading...</h1>;
 

@@ -7,8 +7,8 @@ import {
   Text,
   ThemeIcon,
 } from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
 import { CollectionPlay } from 'react-bootstrap-icons';
-import { useQuery } from 'react-query';
 import uuid from 'react-uuid';
 import useStore from '../../store';
 import { API } from '../../util/api';
@@ -23,7 +23,7 @@ const URL = 'https://image.tmdb.org/t/p/original';
 
 function WatchProviders({ providers, title }: WatchProvidersProps) {
   // TODO: Add isLoading & isError
-  const { data } = useQuery('collection', API.getCollection);
+  const { data } = useQuery(['collection'], API.getCollection);
 
   const collected = data?.data?.find((e: any) => e.movie.title === title);
 

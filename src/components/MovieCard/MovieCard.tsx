@@ -1,8 +1,7 @@
 import { AspectRatio, Image, Text } from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-import { useQuery } from 'react-query';
-import { Link } from 'react-router-dom';
-
+import { createSearchParams, Link } from 'react-router-dom';
 import { API } from '../../util/api';
 import './MovieCard.scss';
 
@@ -27,12 +26,13 @@ function MovieCard({
   const { ref, inView } = useInView({
     triggerOnce: true,
   });
+  // console.log('🚀 ~ inView', title, inView.valueOf());
   const POSTER_PATH = 'https://www.themoviedb.org/t/p/w342';
 
   const { data, isError, isLoading } = useQuery(
-    [tmdbId],
-    () => API.getMovieInfo(tmdbId),
-    { enabled: inView }
+    ['movie', tmdbId],
+    () => API.getMovieInfo(tmdbId)
+    // { enabled: inView }
   );
 
   if (isLoading || isError) {
@@ -43,17 +43,27 @@ function MovieCard({
     );
   }
 
+  const movie = data.data;
+
   return (
     <Link
-      to={`/movie/${data?.data?.id}?list=${list}&watched=${watched}&name=${listName}`}
+      // `/movie/${movie?.id}?list=${list}&watched=${watched}&name=${listName}`
+      to={{
+        pathname: `/movie/${movie?.id}`,
+        search: createSearchParams({
+          list,
+          watched,
+          name: listName,
+        }).toString(),
+      }}
       className="movie-card"
     >
       <AspectRatio ratio={2 / 3}>
         <Image
-          src={POSTER_PATH + data?.data?.posterPath}
+          ref={ref}
+          src={POSTER_PATH + movie?.posterPath}
           alt="poster"
           radius="md"
-          ref={ref}
           withPlaceholder
         />
       </AspectRatio>
