@@ -1,46 +1,53 @@
-# Getting Started with Create React App
+# 🎬 Trakt Movie List 📱
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+_(Catchy name pending...)_
 
-## Available Scripts
+<h2 align="center">Welcome to Movie Night :popcorn::cup_with_straw:</h2>
 
-In the project directory, you can run:
+<div style="display:flex" align="center">
+   <img src="https://ik.imagekit.io/joshandromidas/github-assets/CA1502D0-8661-46F7-9FE0-3546B590471F_1_102_o_FJv15f3of.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1652884803036" width="18%"/>
+   <img src="https://ik.imagekit.io/joshandromidas/github-assets/E12F3F59-BC1F-4EEB-BBED-A02C55A799B9_1_102_o_wYhLiA3c0.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1652885339848" width="18%"/>
+   <img src="https://ik.imagekit.io/joshandromidas/github-assets/825894E3-E9AD-4D9B-B5B8-A24042E42F72_1_102_o_jLTy7bQ1n.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1652885339890" width="18%"/>
+   <img src="https://ik.imagekit.io/joshandromidas/github-assets/740E43C0-BC4E-4086-91AC-BC5013379673_1_102_o_Yg1iQC2Ov.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1652884803117" width="18%"/>
+   <img src="https://ik.imagekit.io/joshandromidas/github-assets/9D23C40C-9789-482D-8E7E-729B6538ED3B_1_102_o_UJdAslEg6.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1652884803318" width="18%"/>
+</div>
 
-### `yarn start`
+## ❓ What is it?
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This project started from a love for movies and the desire to answer the question that my wife and I ask each other very often — _what movie should we watch tonight?_
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+During my time at [Hack Reactor](https://www.hackreactor.com/), we had the chance to work on a 2-day sprint that could be any project we decided to build. I chose to work on this **mobile-first** movie list web application, delivering the minimum viable product after the two days. Now, I’m refactoring and improving it.
 
-### `yarn test`
+Building this app has been a _huge_ learning experience for me! It is created using awesome tools like:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- React
+- Express
+- React Router
+- React Query
+- SASS
+- [Mantine UI](https://mantine.dev/)
+- [Trakt API](https://trakt.docs.apiary.io/)
+- [TMDB API](https://developers.themoviedb.org/3)
+- [Zustand](https://github.com/pmndrs/zustand)
 
-### `yarn build`
+## 🔥 Features
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Sign in with Trakt
+- Create, remove, and edit lists stored in your Trakt account
+- Mark movies as _Watched_ or _To Watch_
+- Search movies
+- Extensive movie details — overview, trailer, actors, watch providers, & more!
+- Settings — select which streaming providers you’d like to see
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 💻 How to use
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This app is deployed on [movielist.joshandromidas.com](https://movielist.joshandromidas.com), which is fully functional and available to anyone to use. This project has also been dockerized, and you can find the image and installation instructions at [joshandromidas/trakt-movie-list](https://hub.docker.com/r/joshandromidas/trakt-movie-list) to deploy it yourself!
 
-### `yarn eject`
+## 🗺️ Roadmap
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+As of right now, this app has been visually designed exclusively for mobile. In other words, it _does_ work on desktop but it _doesn’t_ look pretty — yet. In the coming weeks, I’m considering:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- [ ] Add desktop UI from the ground-up, implementing a responsive design that looks great on all devices
+- [ ] Add other visual goodies like dark/light mode
+- [ ] Add a database connection to store user preferences more robustly
+- [ ] Fix bugs & improve speed

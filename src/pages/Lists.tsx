@@ -13,13 +13,18 @@ import useStore from '../store';
 import { API } from '../util/api';
 import './Lists.scss';
 
-type ListInfoTuple = [number, number, string, number];
+type ListInfoTuple = [
+  listId: number,
+  watchedListId: number,
+  listName: string,
+  movieCount: number
+];
 
 const gradients = [
   { from: 'indigo', to: 'cyan' },
   { from: 'teal', to: 'blue' },
-  { from: '#6d9a31', to: '#2f6a9e' },
   { from: 'orange', to: 'green' },
+  { from: '#6d9a31', to: '#2f6a9e' },
 ];
 
 function Lists() {
@@ -42,11 +47,11 @@ function Lists() {
   const watchList = lists.filter((list) => !list.name.startsWith('__'));
 
   watchList.forEach((list) => {
-    const b = watched.find((watched) => watched.name === `__${list.name}`);
-    if (b) {
+    const w = watched.find((watched) => watched.name === `__${list.name}`);
+    if (w) {
       listInfoArray.push([
         list.ids.trakt!,
-        b.ids.trakt!,
+        w.ids.trakt!,
         list.name,
         list.itemCount,
       ]);
