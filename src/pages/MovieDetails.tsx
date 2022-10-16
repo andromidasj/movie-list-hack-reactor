@@ -3,23 +3,20 @@ import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import { ListActions, TitleNav, WatchProviders } from '../components';
-import parseMovieDetails from '../util/parseMovieDetails';
-
 import { API } from '../util/api';
+import parseMovieDetails from '../util/parseMovieDetails';
 import './MovieDetails.scss';
 
 const BACKDROP_URL = 'https://image.tmdb.org/t/p/w780';
 
 function MovieDetails() {
   const { movieId } = useParams();
+  const navigate = useNavigate();
   const { data, isLoading, isError, error } = useQuery(['movie', movieId], () =>
     API.getMovieInfo(+movieId!)
   );
-  const navigate = useNavigate();
 
-  if (!movieId) {
-    navigate('/');
-  }
+  if (!movieId) navigate('/');
 
   if (isLoading) {
     return (
@@ -36,10 +33,8 @@ function MovieDetails() {
   if (isError) return <p>{JSON.stringify(error)}</p>;
 
   const movie = data!.data;
-  console.log('🚀 ~ MovieDetails ~ movie', movie);
-
   const { runtime, genres, mpaaRating, trailerLink, video, actorArr } =
-    parseMovieDetails(movie);
+    parseMovieDetails(data!.data);
 
   return (
     <>

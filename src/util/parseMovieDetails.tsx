@@ -21,13 +21,11 @@ export default function parseMovieDetails(movie: TmdbMovie) {
 
   const video = videoArrSorted?.[0];
   const trailerLink = 'https://www.youtube.com/embed/' + video?.key;
-
   const actorArr = [];
+
   for (let i = 0; i < 60; i++) {
     const actor = movie.credits.cast[i];
-
     if (!actor) break;
-
     actorArr.push(actor);
   }
 
