@@ -4,15 +4,23 @@ import {
   Button,
   Container,
   Group,
-  Space,
+  Stack,
 } from '@mantine/core';
 import { GearWideConnected, PlusLg } from 'react-bootstrap-icons';
 import { useQuery } from 'react-query';
-import { Link, useNavigate } from 'react-router-dom';
-
+import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import useStore from '../store';
 import { API } from '../util/api';
 import './Lists.scss';
+
+type ListInfoTuple = [number, number, string, number];
+
+const gradients = [
+  { from: 'indigo', to: 'cyan' },
+  { from: 'teal', to: 'blue' },
+  { from: '#6d9a31', to: '#2f6a9e' },
+  { from: 'orange', to: 'green' },
+];
 
 function Lists() {
   const navigate = useNavigate();
@@ -28,9 +36,7 @@ function Lists() {
   if (isError) navigate('/login');
 
   const lists = data!.data;
-
-  // TODO: specify type
-  let listInfoArray: any = [];
+  const listInfoArray: ListInfoTuple[] = [];
 
   const watched = lists.filter((list) => list.name.startsWith('__'));
   const watchList = lists.filter((list) => !list.name.startsWith('__'));
@@ -39,23 +45,50 @@ function Lists() {
     const b = watched.find((watched) => watched.name === `__${list.name}`);
     if (b) {
       listInfoArray.push([
-        list.ids.trakt,
-        b.ids.trakt,
+        list.ids.trakt!,
+        b.ids.trakt!,
         list.name,
         list.itemCount,
       ]);
     }
   });
 
-  // Sort lists alphabetically
-  // listInfoArray = listInfoArray.sort((a, b) => a[2].localeCompare(b[2]));
+  const allLists = listInfoArray.map(
+    (listInfoItem: ListInfoTuple, i: number) => {
+      const params = {
+        list: listInfoItem[0].toString(),
+        watched: listInfoItem[1].toString(),
+        name: listInfoItem[2],
+      };
 
-  const gradients = [
-    { from: 'indigo', to: 'cyan' },
-    { from: 'teal', to: 'blue' },
-    { from: '#6d9a31', to: '#2f6a9e' },
-    { from: 'orange', to: 'green' },
-  ];
+      return (
+        <Button
+          component={Link}
+          to={{
+            pathname: '/list',
+            search: createSearchParams(params).toString(),
+          }}
+          uppercase
+          color="dark"
+          size="xl"
+          radius="lg"
+          key={listInfoItem[0]}
+          style={{
+            height: 100,
+            fontSize: 24,
+            wordWrap: 'break-word',
+          }}
+          variant="gradient"
+          gradient={gradients[i % gradients.length]}
+        >
+          <Badge color="dark" className="list-badge">
+            {listInfoItem[3]}
+          </Badge>
+          {listInfoItem[2]}
+        </Button>
+      );
+    }
+  );
 
   return (
     <>
@@ -75,34 +108,8 @@ function Lists() {
         </Group>
       </div>
 
-      <Space h="xl" />
-      <Container px="xl">
-        <Group grow>
-          {listInfoArray.map((listInfoItem: any, i: number) => (
-            <Button
-              component={Link}
-              to={`/list?list=${listInfoItem[0]}&watched=${listInfoItem[1]}&name=${listInfoItem[2]}`}
-              uppercase
-              color="dark"
-              size="xl"
-              radius="lg"
-              key={listInfoItem[0]}
-              style={{
-                height: 100,
-                fontSize: 24,
-                maxWidth: '100%',
-                wordWrap: 'break-word',
-              }}
-              variant="gradient"
-              gradient={gradients[i % gradients.length]}
-            >
-              <Badge color="dark" className="list-badge">
-                {listInfoItem[3]}
-              </Badge>
-              {listInfoItem[2]}
-            </Button>
-          ))}
-        </Group>
+      <Container px="xl" mt="xl">
+        <Stack>{allLists}</Stack>
       </Container>
     </>
   );

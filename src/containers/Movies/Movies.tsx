@@ -21,34 +21,29 @@ interface MoviesProps {
 }
 
 function Movies({ movies, list, watched, listName }: MoviesProps) {
-  if (!movies) {
-    return <h3>Loading...</h3>;
-  }
+  if (!movies) return <h3>Loading...</h3>;
 
-  // console.log('creating movieCards array...');
   // TODO: specify type
   const movieCards = movies.map((movie: any) => (
     <MovieCard
+      key={uuid()}
       tmdbId={movie.movie.ids.tmdb}
       title={movie.movie.title}
       year={movie.movie.year}
       list={list}
       watched={watched}
-      key={uuid()}
       listName={listName}
     />
   ));
-  // console.log('🚀 ~ Movies ~ movieCards', movieCards);
 
   return (
     <>
       {movies.length ? (
         <>
-          <Container mt={135}>
+          <Container my={135}>
             <SimpleGrid cols={3} spacing="sm">
               {movieCards}
             </SimpleGrid>
-            <Space h={50} />
           </Container>
         </>
       ) : (
