@@ -4,8 +4,8 @@ import _ from 'lodash';
 import { ExclamationCircle } from 'react-bootstrap-icons';
 import { useSearchParams } from 'react-router-dom';
 import { SearchBar, Tabs, TitleNav } from '../components';
-import Movies from '../containers/Movies/Movies';
-import Search from '../containers/Search/Search';
+import Movies from '../containers/Movies';
+import Search from '../containers/Search';
 import useStore from '../store';
 import { API } from '../util/api';
 

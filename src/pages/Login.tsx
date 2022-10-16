@@ -8,7 +8,6 @@ import {
 } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import axios from 'axios';
-
 import { useEffect, useState } from 'react';
 import { LocalStorage } from '../models/enums/LocalStorageKeys';
 import { API } from '../util/api';

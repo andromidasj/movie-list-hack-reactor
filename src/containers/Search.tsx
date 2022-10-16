@@ -3,10 +3,9 @@ import { useDebouncedValue } from '@mantine/hooks';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
-import { MovieCard } from '../../components';
-import useStore from '../../store';
-import { API } from '../../util/api';
-import './Search.scss';
+import MovieCard from '../components/MovieCard';
+import useStore from '../store';
+import { API } from '../util/api';
 
 interface SearchProps {
   listName: string;

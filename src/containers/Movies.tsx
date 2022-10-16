@@ -8,9 +8,8 @@ import {
 } from '@mantine/core';
 import { Film } from 'react-bootstrap-icons';
 import uuid from 'react-uuid';
-import arrow from '../../assets/arrow.png';
-import { MovieCard } from '../../components';
-import './Movies.scss';
+import arrow from '../assets/arrow.png';
+import MovieCard from '../components/MovieCard';
 
 interface MoviesProps {
   // TODO: specify types
