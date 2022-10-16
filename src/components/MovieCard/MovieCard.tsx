@@ -43,8 +43,6 @@ function MovieCard({
     );
   }
 
-  // inView && console.log(`${title} in view`);
-
   return (
     <Link
       to={`/movie/${data?.data?.id}?list=${list}&watched=${watched}&name=${listName}`}
