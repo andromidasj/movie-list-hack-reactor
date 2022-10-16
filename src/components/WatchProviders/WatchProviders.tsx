@@ -19,6 +19,8 @@ interface WatchProvidersProps {
   title: any;
 }
 
+const URL = 'https://image.tmdb.org/t/p/original';
+
 function WatchProviders({ providers, title }: WatchProvidersProps) {
   // TODO: Add isLoading & isError
   const { data } = useQuery('collection', API.getCollection);
@@ -28,10 +30,6 @@ function WatchProviders({ providers, title }: WatchProvidersProps) {
   const myProviders = useStore((state) => state.providers)
     .filter((e) => e.active)
     .map((e) => e.name);
-
-  const URL = 'https://image.tmdb.org/t/p/original';
-  // const plexURL =
-  // 'https://styles.redditmedia.com/t5_2ql7e/styles/communityIcon_qe11it6wwbw81.png';
 
   const filteredProviders = providers?.flatrate?.filter((provider: any) =>
     myProviders.includes(provider.provider_name)
