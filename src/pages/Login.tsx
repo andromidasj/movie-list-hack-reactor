@@ -56,12 +56,8 @@ function Login() {
     };
 
     try {
-      const response = await axios.post(TOKEN_URL, obj, {
-        // headers: {
-        //   'Content-Type': 'application/json',
-        // },
-      });
-      console.log('🚀 ~ handleAuth ~ response', response);
+      const response = await axios.post(TOKEN_URL, obj);
+
       setToken(response.data.access_token);
 
       const userInfo = await axios.get('https://api.trakt.tv/users/settings', {
@@ -73,7 +69,6 @@ function Login() {
         },
       });
 
-      // console.log('🚀 ~ handleAuth ~ userInfo', userInfo);
       setUsername(userInfo.data.user.username);
 
       window.location.replace('/');
