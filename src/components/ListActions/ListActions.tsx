@@ -10,12 +10,12 @@ import { API } from '../../util/api';
 import './ListActions.scss';
 
 function ListActions() {
+  const queryClient = useQueryClient();
   const { movieId } = useParams();
   const [searchParams] = useSearchParams();
   const listId = searchParams.get('list');
   const watchedId = searchParams.get('watched');
   const name = searchParams.get('name');
-  const queryClient = useQueryClient();
 
   // TODO: If no movieId, redirect
 
@@ -25,18 +25,15 @@ function ListActions() {
     API.getListItems(+watchedId!)
   );
 
-  const invalidateQueriesOnSuccess = {
+  const mutationSideEffects = {
     onSuccess: () => {
-      queryClient.invalidateQueries(['list', listId]);
-      queryClient.invalidateQueries(['list', watchedId]);
+      queryClient.invalidateQueries(['list']);
+      queryClient.invalidateQueries(['listItems']);
     },
   };
 
-  const addMovie = useMutation(API.addMovieToList, invalidateQueriesOnSuccess);
-  const removeMovie = useMutation(
-    API.removeMovieFromList,
-    invalidateQueriesOnSuccess
-  );
+  const addMovie = useMutation(API.addMovieToList, mutationSideEffects);
+  const removeMovie = useMutation(API.removeMovieFromList, mutationSideEffects);
 
   if (getList.isLoading || getWatched.isLoading) {
     return (
@@ -60,6 +57,7 @@ function ListActions() {
   const inList = getList.data!.data.find(
     (movie) => movie.movie.ids.tmdb === Number(movieId)
   );
+
   const inWatched = getWatched.data!.data.find(
     (movie) => movie.movie.ids.tmdb === Number(movieId)
   );

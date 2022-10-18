@@ -1,8 +1,9 @@
-import { ActionIcon } from "@mantine/core";
-import { BarChartFill, ChevronLeft } from "react-bootstrap-icons";
-import { useNavigate } from "react-router-dom";
+import { ActionIcon } from '@mantine/core';
+import { useQueryClient } from '@tanstack/react-query';
+import { BarChartFill, ChevronLeft } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 
-import "./TitleNav.scss";
+import './TitleNav.scss';
 
 interface TitleNavProps {
   title: string;
@@ -11,6 +12,7 @@ interface TitleNavProps {
 
 function TitleNav({ title, info = false }: TitleNavProps) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   return (
     <>
@@ -18,6 +20,7 @@ function TitleNav({ title, info = false }: TitleNavProps) {
         <ActionIcon
           color="blue"
           onClick={() => {
+            queryClient.invalidateQueries();
             navigate(-1);
           }}
         >

@@ -1,7 +1,7 @@
 import produce from 'immer';
 import create from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import { Provider } from './models/Provider';
+import { Provider } from './models/tmdb/Provider';
 
 const providers: Provider[] = [
   { name: 'Netflix', active: true, providerId: 8 },

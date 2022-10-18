@@ -1,15 +1,14 @@
 import { Button, Checkbox, Divider, Group, Stack, Title } from '@mantine/core';
 import uuid from 'react-uuid';
 import { TitleNav } from '../components';
-import { LocalStorage } from '../models/enums/LocalStorageKeys';
 import useStore from '../store';
 
 function Settings() {
   const providers = useStore((state) => state.providers);
   const setProviders = useStore((state) => state.setProviders);
+
   const handleLogout = () => {
-    localStorage.removeItem(LocalStorage.ACCESS_TOKEN);
-    localStorage.removeItem(LocalStorage.USER_ID);
+    localStorage.clear();
     window.location.href = '/login';
   };
 

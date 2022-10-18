@@ -23,17 +23,13 @@ function SelectedList() {
     data: list,
     isLoading: isLoadingList,
     isError: isErrorList,
-  } = useQuery(['listItems', listId], () => API.getListItems(+listId!), {
-    staleTime: 1000 * 60 * 60,
-  });
+  } = useQuery(['listItems', listId], () => API.getListItems(+listId!));
 
   const {
     data: watched,
     isLoading: isLoadingWatched,
     isError: isErrorWatched,
-  } = useQuery(['listItems', watchedId], () => API.getListItems(+watchedId!), {
-    staleTime: 1000 * 60 * 60,
-  });
+  } = useQuery(['listItems', watchedId], () => API.getListItems(+watchedId!));
 
   if (isErrorList || isErrorWatched) {
     return (
@@ -55,6 +51,7 @@ function SelectedList() {
       </>
     );
   }
+
   const listFiltered = _.orderBy(
     list?.data.filter((movie) =>
       movie.movie.title.toLowerCase().includes(searchQuery.toLowerCase())

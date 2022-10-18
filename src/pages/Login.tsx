@@ -27,8 +27,7 @@ function Login() {
   // TODO: replace window with useNavigation()
   useEffect(() => {
     API.getStats()
-      .then((response) => {
-        console.log('🚀 ~ useEffect ~ response', response);
+      .then(() => {
         window.location.replace('/');
       })
       .catch((err) => {
