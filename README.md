@@ -41,7 +41,7 @@ Building this app has been a _huge_ learning experience for me! It is created us
 
 ## 💻 How to use
 
-This app is deployed on [movielist.joshandromidas.com](https://movielist.joshandromidas.com), which is fully functional and available to anyone to use. This project has also been dockerized, and you can find the image and installation instructions at [joshandromidas/trakt-movie-list](https://hub.docker.com/r/joshandromidas/trakt-movie-list) to deploy it yourself!
+This project has also been dockerized, and you can find the image and installation instructions at [joshandromidas/trakt-movie-list](https://hub.docker.com/r/joshandromidas/trakt-movie-list) to deploy it yourself!
 
 ## 🗺️ Roadmap
 
