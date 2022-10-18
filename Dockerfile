@@ -10,5 +10,6 @@ COPY . .
 
 RUN yarn install
 
-# CMD [ "node", "server/index.js" ]
 CMD serve -s build
+
+# docker buildx build --platform linux/amd64,linux/arm64 --push -t joshandromidas/trakt-movie-list .
