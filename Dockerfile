@@ -10,6 +10,8 @@ COPY . .
 
 RUN yarn install
 
+RUN yarn build
+
 CMD serve -s build
 
 # docker buildx build --platform linux/amd64,linux/arm64 --push -t joshandromidas/trakt-movie-list .
