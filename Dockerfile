@@ -12,6 +12,6 @@ RUN yarn install
 
 RUN yarn build
 
-CMD serve -s build
+CMD ["yarn", "deploy"]
 
 # docker buildx build --platform linux/amd64,linux/arm64 --push -t joshandromidas/trakt-movie-list .
