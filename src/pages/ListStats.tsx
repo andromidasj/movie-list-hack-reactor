@@ -10,7 +10,7 @@ import {
 } from '@mantine/core';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Trash } from 'react-bootstrap-icons';
+import { FiletypeCsv, Trash } from 'react-bootstrap-icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import { TitleNav } from '../components';
@@ -107,7 +107,10 @@ function ListStats() {
     // Download file with specified name
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `${name}_movielist_backup.csv`);
+    link.setAttribute(
+      'download',
+      `${name?.split(' ').join('_')}_movielist_backup.csv`
+    );
 
     document.body.appendChild(link); // Required for FF
     link.click();
@@ -179,7 +182,7 @@ function ListStats() {
         <Space h={150} />
 
         <Stack spacing="xl">
-          <Button onClick={handleDownload} fullWidth>
+          <Button leftIcon={<FiletypeCsv />} onClick={handleDownload} fullWidth>
             Download CSV
           </Button>
           <Button
