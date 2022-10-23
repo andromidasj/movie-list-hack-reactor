@@ -1,4 +1,4 @@
 export enum LocalStorage {
-  ACCESS_TOKEN = 'access_token',
-  USER_ID = 'user_id',
+  ACCESS_TOKEN = 'trakt_access_token',
+  USER_ID = 'trakt_user_id',
 }

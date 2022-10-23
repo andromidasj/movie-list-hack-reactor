@@ -36,3 +36,4 @@ yarn-error.log*
 
 # Built Visual Studio Code Extensions
 *.vsix
+docker-compose.yaml

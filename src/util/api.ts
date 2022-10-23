@@ -21,9 +21,11 @@ interface ListMovieInput {
 const ACCOUNT_ID = JSON.parse(
   localStorage.getItem(LocalStorage.USER_ID) || '""'
 );
+
 const ACCESS_TOKEN = JSON.parse(
   localStorage.getItem(LocalStorage.ACCESS_TOKEN) || '""'
 );
+
 const BASE_URL = 'https://api.themoviedb.org';
 
 const TMDB = applyCaseMiddleware(
