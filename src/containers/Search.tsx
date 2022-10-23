@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import MovieCard from '../components/MovieCard';
+import { QUERY_KEYS } from '../models/enums/QueryKeys';
 import useStore from '../store';
 import { API } from '../util/api';
 
@@ -21,7 +22,7 @@ function Search({ listName }: SearchProps) {
   const [debouncedQuery] = useDebouncedValue(searchQuery, 500);
 
   const { data, isLoading, isError } = useQuery(
-    ['search', debouncedQuery],
+    [QUERY_KEYS.SEARCH, debouncedQuery],
     () => API.search(debouncedQuery),
     { enabled: debouncedQuery.length > 0 }
   );

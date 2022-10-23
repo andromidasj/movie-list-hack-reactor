@@ -14,6 +14,7 @@ import { Download, Trash } from 'react-bootstrap-icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import { TitleNav } from '../components';
+import { QUERY_KEYS } from '../models/enums/QueryKeys';
 import { ListItems } from '../models/trakt/ListItems';
 import { API } from '../util/api';
 import './ListStats.scss';
@@ -28,17 +29,20 @@ function ListStats() {
   const [modalOpened, setModalOpened] = useState(false);
   const deleteList = useMutation(API.deleteLists);
 
-  const list = useQuery(['listInfo', listId], () => API.getListInfo(+listId!));
-  const watched = useQuery(['listInfo', watchedId], () =>
+  const list = useQuery([QUERY_KEYS.LIST_INFO, listId], () =>
+    API.getListInfo(+listId!)
+  );
+  const watched = useQuery([QUERY_KEYS.LIST_INFO, watchedId], () =>
     API.getListInfo(+watchedId!)
   );
 
-  const { data: listItems } = useQuery(['listItems', listId], () =>
+  const { data: listItems } = useQuery([QUERY_KEYS.LIST_ITEMS, listId], () =>
     API.getListItems(+listId!)
   );
 
-  const { data: watchedItems } = useQuery(['listItems', watchedId], () =>
-    API.getListItems(+watchedId!)
+  const { data: watchedItems } = useQuery(
+    [QUERY_KEYS.LIST_ITEMS, watchedId],
+    () => API.getListItems(+watchedId!)
   );
 
   const detailsData = [

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import urlJoin from 'url-join';
 import { ListActions, TitleNav, WatchProviders } from '../components';
+import { QUERY_KEYS } from '../models/enums/QueryKeys';
 import { API } from '../util/api';
 import parseMovieDetails from '../util/parseMovieDetails';
 import './MovieDetails.scss';
@@ -13,8 +14,9 @@ const BACKDROP_URL = 'https://image.tmdb.org/t/p/w780';
 function MovieDetails() {
   const { movieId } = useParams();
   const navigate = useNavigate();
-  const { data, isLoading, isError, error } = useQuery(['movie', movieId], () =>
-    API.getMovieInfo(+movieId!)
+  const { data, isLoading, isError, error } = useQuery(
+    [QUERY_KEYS.MOVIE, movieId],
+    () => API.getMovieInfo(+movieId!)
   );
 
   if (!movieId) navigate('/');

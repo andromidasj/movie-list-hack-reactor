@@ -6,6 +6,7 @@ import {
   CheckCircleFill,
 } from 'react-bootstrap-icons';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { QUERY_KEYS } from '../../models/enums/QueryKeys';
 import { API } from '../../util/api';
 import './ListActions.scss';
 
@@ -19,16 +20,18 @@ function ListActions() {
 
   // TODO: If no movieId, redirect
 
-  const getList = useQuery(['list', listId], () => API.getListItems(+listId!));
+  const getList = useQuery([QUERY_KEYS.LIST, listId], () =>
+    API.getListItems(+listId!)
+  );
 
-  const getWatched = useQuery(['list', watchedId], () =>
+  const getWatched = useQuery([QUERY_KEYS.LIST, watchedId], () =>
     API.getListItems(+watchedId!)
   );
 
   const mutationSideEffects = {
     onSuccess: () => {
-      queryClient.invalidateQueries(['list']);
-      queryClient.invalidateQueries(['listItems']);
+      queryClient.invalidateQueries([QUERY_KEYS.LIST]);
+      queryClient.invalidateQueries([QUERY_KEYS.LIST_ITEMS]);
     },
   };
 

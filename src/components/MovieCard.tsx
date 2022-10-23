@@ -3,6 +3,7 @@ import { useIntersection } from '@mantine/hooks';
 import { useQuery } from '@tanstack/react-query';
 import { createSearchParams, Link } from 'react-router-dom';
 import urlJoin from 'url-join';
+import { QUERY_KEYS } from '../models/enums/QueryKeys';
 import { API } from '../util/api';
 
 interface MovieCardProps {
@@ -28,9 +29,13 @@ function MovieCard({
 }: MovieCardProps) {
   const { ref, entry } = useIntersection({ threshold: 0 });
 
-  const { data } = useQuery(['movie', tmdbId], () => API.getMovieInfo(tmdbId), {
-    enabled: !!entry?.isIntersecting,
-  });
+  const { data } = useQuery(
+    [QUERY_KEYS.MOVIE, tmdbId],
+    () => API.getMovieInfo(tmdbId),
+    {
+      enabled: !!entry?.isIntersecting,
+    }
+  );
 
   if (data) {
     const movie = data!.data;

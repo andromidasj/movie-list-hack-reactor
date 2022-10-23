@@ -9,6 +9,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { GearWideConnected, PlusLg } from 'react-bootstrap-icons';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
+import { QUERY_KEYS } from '../models/enums/QueryKeys';
 import useStore from '../store';
 import { API } from '../util/api';
 import './Lists.scss';
@@ -34,7 +35,10 @@ function Lists() {
   setTab('toWatch');
   setSearchQuery('');
 
-  const { data, isLoading, isError } = useQuery(['lists'], API.getLists);
+  const { data, isLoading, isError } = useQuery(
+    [QUERY_KEYS.ALL_LISTS],
+    API.getLists
+  );
 
   if (isLoading) return <h1>Loading...</h1>;
 

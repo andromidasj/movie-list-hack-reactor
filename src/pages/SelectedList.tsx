@@ -6,8 +6,11 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchBar, Tabs, TitleNav } from '../components';
 import Movies from '../containers/Movies';
 import Search from '../containers/Search';
+import { QUERY_KEYS } from '../models/enums/QueryKeys';
 import useStore from '../store';
 import { API } from '../util/api';
+
+const SORT_KEY = 'listedAt';
 
 function SelectedList() {
   const [searchParams] = useSearchParams();
@@ -23,13 +26,17 @@ function SelectedList() {
     data: list,
     isLoading: isLoadingList,
     isError: isErrorList,
-  } = useQuery(['listItems', listId], () => API.getListItems(+listId!));
+  } = useQuery([QUERY_KEYS.LIST_ITEMS, listId], () =>
+    API.getListItems(+listId!)
+  );
 
   const {
     data: watched,
     isLoading: isLoadingWatched,
     isError: isErrorWatched,
-  } = useQuery(['listItems', watchedId], () => API.getListItems(+watchedId!));
+  } = useQuery([QUERY_KEYS.LIST_ITEMS, watchedId], () =>
+    API.getListItems(+watchedId!)
+  );
 
   if (isErrorList || isErrorWatched) {
     return (
@@ -56,14 +63,14 @@ function SelectedList() {
     list?.data.filter((movie) =>
       movie.movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     ),
-    'listed_at'
+    SORT_KEY
   );
 
   const watchedFiltered = _.orderBy(
     watched?.data.filter((movie) =>
       movie.movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     ),
-    'listed_at'
+    SORT_KEY
   );
 
   return (
