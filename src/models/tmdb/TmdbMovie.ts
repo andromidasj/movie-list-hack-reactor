@@ -161,7 +161,7 @@ interface WatchProviders {
 }
 
 interface WPResults {
-  us: Us;
+  us?: Us;
 }
 
 export interface Us {

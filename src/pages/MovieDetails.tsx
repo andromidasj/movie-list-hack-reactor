@@ -91,7 +91,7 @@ function MovieDetails() {
         </div>
 
         <WatchProviders
-          providers={movie.watchProviders.results.us.flatrate}
+          providers={movie.watchProviders.results.us?.flatrate}
           title={movie.title}
         />
       </div>
