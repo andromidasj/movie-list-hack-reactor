@@ -10,7 +10,7 @@ import {
 } from '@mantine/core';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { FiletypeCsv, Trash } from 'react-bootstrap-icons';
+import { Download, Trash } from 'react-bootstrap-icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import { TitleNav } from '../components';
@@ -182,7 +182,7 @@ function ListStats() {
         <Space h={150} />
 
         <Stack spacing="xl">
-          <Button leftIcon={<FiletypeCsv />} onClick={handleDownload} fullWidth>
+          <Button leftIcon={<Download />} onClick={handleDownload} fullWidth>
             Download CSV
           </Button>
           <Button
