@@ -1,10 +1,20 @@
-import { Button, Group, Modal, Space, Table, Text, Title } from '@mantine/core';
+import {
+  Button,
+  Group,
+  Modal,
+  Space,
+  Stack,
+  Table,
+  Text,
+  Title,
+} from '@mantine/core';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Trash } from 'react-bootstrap-icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import { TitleNav } from '../components';
+import { ListItems } from '../models/trakt/ListItems';
 import { API } from '../util/api';
 import './ListStats.scss';
 
@@ -21,6 +31,14 @@ function ListStats() {
   const list = useQuery(['listInfo', listId], () => API.getListInfo(+listId!));
   const watched = useQuery(['listInfo', watchedId], () =>
     API.getListInfo(+watchedId!)
+  );
+
+  const { data: listItems } = useQuery(['listItems', listId], () =>
+    API.getListItems(+listId!)
+  );
+
+  const { data: watchedItems } = useQuery(['listItems', watchedId], () =>
+    API.getListItems(+watchedId!)
   );
 
   const detailsData = [
@@ -58,6 +76,44 @@ function ListStats() {
     });
   };
 
+  const handleDownload = (): void => {
+    if (!listItems || !watchedItems) return;
+
+    let csvContent = 'data:text/csv;charset=utf-8,';
+    csvContent += 'watched?,trakt_id,tmdb_id,imdb_id,title,year\n';
+
+    const appendMovieVals = (movie: ListItems, row: string[]) => {
+      row.push(movie.movie.ids.trakt?.toString() || '');
+      row.push(movie.movie.ids.tmdb?.toString() || '');
+      row.push(movie.movie.ids.imdb?.toString() || '');
+      row.push(`"${movie.movie.title}"`);
+      row.push(movie.movie.year.toString() || '');
+    };
+
+    listItems.data.forEach((movie) => {
+      let newRow = ['false'];
+      appendMovieVals(movie, newRow);
+      csvContent += newRow.join(',') + '\n';
+    });
+
+    watchedItems.data.forEach((movie) => {
+      let newRow = ['true'];
+      appendMovieVals(movie, newRow);
+      csvContent += newRow.join(',') + '\n';
+    });
+
+    const encodedUri = encodeURI(csvContent);
+
+    // Download file with specified name
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `${name}_movielist_backup.csv`);
+
+    document.body.appendChild(link); // Required for FF
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       <TitleNav title="List Details" />
@@ -71,8 +127,8 @@ function ListStats() {
         >
           <Title order={2}>
             <Text color="red" weight="bold" inherit component="span">
-              Deleting
-            </Text>{' '}
+              Deleting{' '}
+            </Text>
             this list will permanently delete all list data. Are you sure you
             want to continue?
           </Title>
@@ -121,18 +177,22 @@ function ListStats() {
           </tbody>
         </Table>
         <Space h={150} />
-        {/* <Center> */}
-        <Button
-          color="red"
-          fullWidth
-          leftIcon={<Trash />}
-          onClick={() => {
-            setModalOpened(true);
-          }}
-        >
-          Delete List
-        </Button>
-        {/* </Center> */}
+
+        <Stack spacing="xl">
+          <Button onClick={handleDownload} fullWidth>
+            Download CSV
+          </Button>
+          <Button
+            color="red"
+            fullWidth
+            leftIcon={<Trash />}
+            onClick={() => {
+              setModalOpened(true);
+            }}
+          >
+            Delete List
+          </Button>
+        </Stack>
       </div>
     </>
   );
