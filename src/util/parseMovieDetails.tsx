@@ -1,6 +1,9 @@
 import uuid from 'react-uuid';
 import { TmdbMovie } from '../models/tmdb/TmdbMovie';
 
+const OFFICIAL_TEXT = 'official';
+const MAX_ACTORS_TO_SHOW = 69;
+
 export default function parseMovieDetails(movie: TmdbMovie) {
   // Sort and choose trailer
   // Sort by 1. official, 2. type, 3. official (title)
@@ -13,9 +16,9 @@ export default function parseMovieDetails(movie: TmdbMovie) {
   );
 
   videoArrSorted = videoArrSorted.sort((a, b) =>
-    a.name.toLowerCase().includes('official')
+    a.name.toLowerCase().includes(OFFICIAL_TEXT)
       ? -1
-      : b.name.toLowerCase().includes('official')
+      : b.name.toLowerCase().includes(OFFICIAL_TEXT)
       ? 1
       : 0
   );
@@ -25,9 +28,12 @@ export default function parseMovieDetails(movie: TmdbMovie) {
 
   // Cast
   const actorArr = [];
-  for (let i = 0; i < 60; i++) {
+  for (
+    let i = 0;
+    i < Math.min(movie.credits.cast.length, MAX_ACTORS_TO_SHOW);
+    i++
+  ) {
     const actor = movie.credits.cast[i];
-    if (!actor) break;
     actorArr.push(actor);
   }
 
