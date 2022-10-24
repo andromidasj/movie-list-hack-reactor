@@ -21,7 +21,7 @@ export default function parseMovieDetails(movie: TmdbMovie) {
   );
 
   const video = videoArrSorted?.[0];
-  const trailerLink = 'https://www.youtube.com/embed/' + video?.key;
+  const trailerLink = 'https://www.youtube-nocookie.com/embed/' + video?.key;
 
   // Cast
   const actorArr = [];
@@ -43,10 +43,12 @@ export default function parseMovieDetails(movie: TmdbMovie) {
       : null;
 
   // TODO: runtime can be null
-  const runtime = `
+  const runtime = movie.runtime
+    ? `
       ${Math.floor(movie.runtime! / 60)} hr
       ${movie.runtime! % 60} min
-    `;
+    `
+    : 0;
 
   const genres = movie.genres
     .slice(0, 3)

@@ -3,13 +3,16 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import urlJoin from 'url-join';
-import { ListActions, TitleNav, WatchProviders } from '../components';
+import ListActions from '../components/ListActions/ListActions';
+import TitleNav from '../components/TitleNav/TitleNav';
+import WatchProviders from '../components/WatchProviders/WatchProviders';
 import { QUERY_KEYS } from '../enums/QueryKeys';
 import { API } from '../util/api';
 import parseMovieDetails from '../util/parseMovieDetails';
 import './MovieDetails.scss';
 
 const BACKDROP_URL = 'https://image.tmdb.org/t/p/w780';
+const ACTOR_IMAGE_URL = 'https://image.tmdb.org/t/p/w342';
 
 function MovieDetails() {
   const { movieId } = useParams();
@@ -43,20 +46,22 @@ function MovieDetails() {
   return (
     <>
       <TitleNav title={movie.title} />
-      <div className="md-backdrop-container">
-        <img
-          className="md-backdrop"
-          alt="backdrop"
-          src={BACKDROP_URL + movie.backdropPath}
-        />
-        <div className="md-inner-backdrop-info">
-          <div className="md-runtime-container">
-            <span className="md-rating">{mpaaRating}</span>
-            <span>{runtime}</span>
+      {movie.backdropPath && (
+        <div className="md-backdrop-container">
+          <img
+            className="md-backdrop"
+            alt="backdrop"
+            src={BACKDROP_URL + movie.backdropPath}
+          />
+          <div className="md-inner-backdrop-info">
+            <div className="md-runtime-container">
+              {mpaaRating && <span className="md-rating">{mpaaRating}</span>}
+              {!!runtime && <span>{runtime}</span>}
+            </div>
+            <div className="md-genre-container">{genres}</div>
           </div>
-          <div className="md-genre-container">{genres}</div>
         </div>
-      </div>
+      )}
       <div className="md-body-container">
         <Spoiler
           maxHeight={76}
@@ -76,10 +81,7 @@ function MovieDetails() {
               <Avatar
                 src={
                   actor
-                    ? urlJoin(
-                        'https://image.tmdb.org/t/p/w342',
-                        actor.profilePath || ''
-                      )
+                    ? urlJoin(ACTOR_IMAGE_URL, actor.profilePath || '')
                     : null
                 }
                 className="actor-avatar"
