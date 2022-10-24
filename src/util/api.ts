@@ -17,6 +17,10 @@ interface ListMovieInput {
   listId: number;
 }
 
+const TRAKT_API_KEY = import.meta.env.VITE_TRAKT_API_KEY;
+const TRAKT_SECRET = import.meta.env.VITE_TRAKT_SECRET;
+const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+
 const ACCOUNT_ID = JSON.parse(
   localStorage.getItem(LocalStorage.USER_ID) || '""'
 );
@@ -40,7 +44,7 @@ export const TRAKT = applyCaseMiddleware(
       Authorization: `Bearer ${ACCESS_TOKEN}`,
       'Content-Type': 'application/json',
       'trakt-api-version': '2',
-      'trakt-api-key': process.env.REACT_APP_TRAKT_API_KEY!,
+      'trakt-api-key': TRAKT_API_KEY!,
       // 'x-sort-by': 'added',
       // 'x-sort-how': 'asc',
     },
@@ -49,7 +53,7 @@ export const TRAKT = applyCaseMiddleware(
 
 const params = {
   language: 'en-US',
-  api_key: process.env.REACT_APP_TMDB_API_KEY,
+  api_key: TMDB_API_KEY,
   append_to_response:
     'videos,credits,watch/providers,similar,recommendations,release_dates',
 };
@@ -106,7 +110,7 @@ export const API = {
     TMDB.get('3/search/movie', {
       params: {
         query,
-        api_key: process.env.REACT_APP_TMDB_API_KEY,
+        api_key: TMDB_API_KEY,
         language: 'en-US',
         page: 1,
         include_adult: false,
@@ -122,7 +126,7 @@ export const API = {
   getWatchProviders: (): Promise<AxiosResponse<WatchProviderResponse>> =>
     TMDB.get('3/watch/providers/movie', {
       params: {
-        api_key: process.env.REACT_APP_TMDB_API_KEY,
+        api_key: TMDB_API_KEY,
         language: 'en-US',
         watch_region: 'US',
       },
