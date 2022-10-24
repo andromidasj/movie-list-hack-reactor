@@ -12,6 +12,9 @@ import { useEffect, useState } from 'react';
 import { LocalStorage } from '../enums/LocalStorageKeys';
 import { API } from '../util/api';
 
+const TRAKT_API_KEY = import.meta.env.VITE_TRAKT_API_KEY;
+const TRAKT_SECRET = import.meta.env.VITE_TRAKT_SECRET;
+
 const REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob';
 const AUTH_URL = 'https://trakt.tv/oauth/authorize';
 const TOKEN_URL = 'https://api.trakt.tv/oauth/token';
@@ -38,7 +41,7 @@ function Login() {
   const authRedirect = () => {
     const authUrl = new URL(AUTH_URL);
     authUrl.searchParams.set('response_type', 'code');
-    authUrl.searchParams.set('client_id', process.env.REACT_APP_TRAKT_API_KEY!);
+    authUrl.searchParams.set('client_id', TRAKT_API_KEY!);
     authUrl.searchParams.set('redirect_uri', REDIRECT_URI);
 
     window.open(authUrl);
@@ -48,8 +51,8 @@ function Login() {
   const handleAuth = async () => {
     const obj = {
       code: code,
-      client_id: process.env.REACT_APP_TRAKT_API_KEY,
-      client_secret: process.env.REACT_APP_TRAKT_SECRET,
+      client_id: TRAKT_API_KEY,
+      client_secret: TRAKT_SECRET,
       redirect_uri: REDIRECT_URI,
       grant_type: 'authorization_code',
     };
@@ -63,7 +66,7 @@ function Login() {
         headers: {
           'content-type': 'application/json',
           'trakt-api-version': '2',
-          'trakt-api-key': process.env.REACT_APP_TRAKT_API_KEY!,
+          'trakt-api-key': TRAKT_API_KEY!,
           Authorization: `Bearer ${response.data.access_token}`,
         },
       });
@@ -90,7 +93,7 @@ function Login() {
           size="xl"
           onClick={authRedirect}
           rightIcon={
-            <Image width={30} height={30} src={'assets/trakt-icon-red.svg'} />
+            <Image width={30} height={30} src={'/trakt-icon-red.svg'} />
           }
         >
           Login with Trakt
