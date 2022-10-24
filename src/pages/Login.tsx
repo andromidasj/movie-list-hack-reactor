@@ -9,7 +9,7 @@ import {
 import { useLocalStorage } from '@mantine/hooks';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { LocalStorage } from '../models/enums/LocalStorageKeys';
+import { LocalStorage } from '../enums/LocalStorageKeys';
 import { API } from '../util/api';
 
 const REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob';

@@ -6,7 +6,7 @@ import {
   CheckCircleFill,
 } from 'react-bootstrap-icons';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { QUERY_KEYS } from '../../models/enums/QueryKeys';
+import { QUERY_KEYS } from '../../enums/QueryKeys';
 import { API } from '../../util/api';
 import './ListActions.scss';
 

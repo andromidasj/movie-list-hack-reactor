@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import MovieCard from '../components/MovieCard';
-import { QUERY_KEYS } from '../models/enums/QueryKeys';
+import { QUERY_KEYS } from '../enums/QueryKeys';
 import useStore from '../store';
 import { API } from '../util/api';
 

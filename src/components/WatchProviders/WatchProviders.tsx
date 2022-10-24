@@ -11,7 +11,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { CollectionPlay } from 'react-bootstrap-icons';
 import uuid from 'react-uuid';
-import { QUERY_KEYS } from '../../models/enums/QueryKeys';
+import { QUERY_KEYS } from '../../enums/QueryKeys';
 import { Flatrate } from '../../models/tmdb/TmdbMovie';
 import { MovieCollection } from '../../models/trakt/MovieCollection';
 import useStore from '../../store';

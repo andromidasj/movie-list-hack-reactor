@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import urlJoin from 'url-join';
 import { ListActions, TitleNav, WatchProviders } from '../components';
-import { QUERY_KEYS } from '../models/enums/QueryKeys';
+import { QUERY_KEYS } from '../enums/QueryKeys';
 import { API } from '../util/api';
 import parseMovieDetails from '../util/parseMovieDetails';
 import './MovieDetails.scss';

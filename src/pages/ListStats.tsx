@@ -14,7 +14,7 @@ import { Download, Trash } from 'react-bootstrap-icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import { TitleNav } from '../components';
-import { QUERY_KEYS } from '../models/enums/QueryKeys';
+import { QUERY_KEYS } from '../enums/QueryKeys';
 import { ListItems } from '../models/trakt/ListItems';
 import { API } from '../util/api';
 import './ListStats.scss';

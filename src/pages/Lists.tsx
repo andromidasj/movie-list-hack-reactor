@@ -9,7 +9,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { GearWideConnected, PlusLg } from 'react-bootstrap-icons';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
-import { QUERY_KEYS } from '../models/enums/QueryKeys';
+import { QUERY_KEYS } from '../enums/QueryKeys';
 import useStore from '../store';
 import { API } from '../util/api';
 import './Lists.scss';

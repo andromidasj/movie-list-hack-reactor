@@ -6,7 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchBar, Tabs, TitleNav } from '../components';
 import Movies from '../containers/Movies';
 import Search from '../containers/Search';
-import { QUERY_KEYS } from '../models/enums/QueryKeys';
+import { QUERY_KEYS } from '../enums/QueryKeys';
 import useStore from '../store';
 import { API } from '../util/api';
 

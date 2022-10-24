@@ -3,7 +3,7 @@ import { useIntersection } from '@mantine/hooks';
 import { useQuery } from '@tanstack/react-query';
 import { createSearchParams, Link } from 'react-router-dom';
 import urlJoin from 'url-join';
-import { QUERY_KEYS } from '../models/enums/QueryKeys';
+import { QUERY_KEYS } from '../enums/QueryKeys';
 import { API } from '../util/api';
 
 interface MovieCardProps {

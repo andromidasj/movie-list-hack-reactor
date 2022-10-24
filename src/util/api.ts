@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import applyCaseMiddleware from 'axios-case-converter';
-import { LocalStorage } from '../models/enums/LocalStorageKeys';
+import { LocalStorage } from '../enums/LocalStorageKeys';
 import { SearchResponse } from '../models/tmdb/SearchResponse';
 import { TmdbMovie } from '../models/tmdb/TmdbMovie';
 import { WatchProviderResponse } from '../models/tmdb/WatchProviderResponse';
