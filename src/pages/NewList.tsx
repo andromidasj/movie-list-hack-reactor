@@ -13,7 +13,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ExclamationCircle } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
-import { TitleNav } from '../components';
+import TitleNav from '../components/TitleNav/TitleNav';
 import { API } from '../util/api';
 import './NewList.scss';
 

@@ -1,6 +1,6 @@
 import { Button, Checkbox, Divider, Group, Stack, Title } from '@mantine/core';
 import uuid from 'react-uuid';
-import { TitleNav } from '../components';
+import TitleNav from '../components/TitleNav/TitleNav';
 import useStore from '../store';
 
 function Settings() {

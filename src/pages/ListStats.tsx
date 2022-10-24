@@ -13,7 +13,7 @@ import { useState } from 'react';
 import { Download, Trash } from 'react-bootstrap-icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
-import { TitleNav } from '../components';
+import TitleNav from '../components/TitleNav/TitleNav';
 import { QUERY_KEYS } from '../enums/QueryKeys';
 import { ListItems } from '../models/trakt/ListItems';
 import { API } from '../util/api';
