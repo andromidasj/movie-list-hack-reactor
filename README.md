@@ -45,7 +45,7 @@ This project has been dockerized — you can find the image and installation ins
 
 ## 🗺️ Roadmap
 
-As of right now, this app has been visually designed exclusively for mobile. In other words, it _does_ work on desktop but it _doesn’t_ look pretty — yet. In the coming weeks, I’m considering:
+As of right now, this app has been visually designed exclusively for mobile. In other words, it _does_ work on desktop but it _doesn’t_ look pretty — yet. In the future I'll consider:
 
 - [ ] Add desktop UI from the ground-up, implementing a responsive design that looks great on all devices
 - [ ] Add other visual goodies like dark/light mode
