@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosPromise } from 'axios';
 import applyCaseMiddleware from 'axios-case-converter';
 import { LocalStorage } from '../enums/LocalStorageKeys';
 import { SearchResponse } from '../models/tmdb/SearchResponse';
@@ -63,7 +63,7 @@ export const API = {
     name,
     description = '',
     privacy,
-  }: NewListInput): Promise<AxiosResponse<ListResult>> => {
+  }: NewListInput): AxiosPromise<ListResult> => {
     const body = {
       name,
       description,
@@ -73,19 +73,19 @@ export const API = {
     return TRAKT.post(`users/${ACCOUNT_ID}/lists`, body);
   },
 
-  getLists: (): Promise<AxiosResponse<ListResult[]>> =>
+  getLists: (): AxiosPromise<ListResult[]> =>
     TRAKT.get(`users/${ACCOUNT_ID}/lists`),
 
-  getListInfo: (listId: number): Promise<AxiosResponse<ListResult>> =>
+  getListInfo: (listId: number): AxiosPromise<ListResult> =>
     TRAKT.get(`users/${ACCOUNT_ID}/lists/${listId}`),
 
-  getListItems: (listId: number): Promise<AxiosResponse<ListItems[]>> =>
+  getListItems: (listId: number): AxiosPromise<ListItems[]> =>
     TRAKT.get(`users/${ACCOUNT_ID}/lists/${listId}/items`),
 
-  getCollection: (): Promise<AxiosResponse<MovieCollection[]>> =>
+  getCollection: (): AxiosPromise<MovieCollection[]> =>
     TRAKT.get(`sync/collection/movies`),
 
-  getMovieInfo: (movieId: number): Promise<AxiosResponse<TmdbMovie>> =>
+  getMovieInfo: (movieId: number): AxiosPromise<TmdbMovie> =>
     TMDB.get(`3/movie/${movieId}`, {
       params,
     }),
@@ -93,7 +93,7 @@ export const API = {
   addMovieToList: ({
     movieId,
     listId,
-  }: ListMovieInput): Promise<AxiosResponse<AddListItemsResponse>> =>
+  }: ListMovieInput): AxiosPromise<AddListItemsResponse> =>
     TRAKT.post(`users/${ACCOUNT_ID}/lists/${listId}/items`, {
       movies: [{ ids: { tmdb: movieId } }],
     }),
@@ -101,12 +101,12 @@ export const API = {
   removeMovieFromList: ({
     movieId,
     listId,
-  }: ListMovieInput): Promise<AxiosResponse<RemoveListItemsResponse>> =>
+  }: ListMovieInput): AxiosPromise<RemoveListItemsResponse> =>
     TRAKT.post(`users/${ACCOUNT_ID}/lists/${listId}/items/remove`, {
       movies: [{ ids: { tmdb: movieId } }],
     }),
 
-  search: (query: string): Promise<AxiosResponse<SearchResponse>> =>
+  search: (query: string): AxiosPromise<SearchResponse> =>
     TMDB.get('3/search/movie', {
       params: {
         query,
@@ -117,13 +117,12 @@ export const API = {
       },
     }),
 
-  deleteLists: (listId: number): Promise<AxiosResponse> =>
+  deleteLists: (listId: number): AxiosPromise =>
     TRAKT.delete(`users/${ACCOUNT_ID}/lists/${listId}`),
 
-  getStats: (): Promise<AxiosResponse<UserSettings>> =>
-    TRAKT.get('users/settings'),
+  getStats: (): AxiosPromise<UserSettings> => TRAKT.get('users/settings'),
 
-  getWatchProviders: (): Promise<AxiosResponse<WatchProviderResponse>> =>
+  getWatchProviders: (): AxiosPromise<WatchProviderResponse> =>
     TMDB.get('3/watch/providers/movie', {
       params: {
         api_key: TMDB_API_KEY,
