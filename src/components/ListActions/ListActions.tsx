@@ -1,14 +1,18 @@
-import { Button, Group, Title } from '@mantine/core';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Button, Group, MantineTheme, Title } from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import {
   Bookmark,
   BookmarkFill,
   CheckCircle,
   CheckCircleFill,
 } from 'react-bootstrap-icons';
+import Confetti from 'react-dom-confetti';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { QUERY_KEYS } from '../../enums/QueryKeys';
 import { SEARCH_PARAMS } from '../../enums/SearchParams';
+import useAddMovieToList from '../../hooks/useAddMovieToList';
+import useRemoveMovieFromList from '../../hooks/useRemoveMovieFromList';
 import { API } from '../../util/api';
 import './ListActions.scss';
 
@@ -20,52 +24,47 @@ const activeButtonRoot = {
   },
 };
 
-const disabledButtonRoot = { ...activeButtonRoot, backgroundColor: 'black' };
+const disabledButtonStyle = (theme: MantineTheme) => ({
+  leftIcon: { color: theme.colors.blue[4] },
+  root: { ...activeButtonRoot, backgroundColor: 'black' },
+});
 
 function ListActions() {
-  const queryClient = useQueryClient();
   const { movieId } = useParams();
   const [searchParams] = useSearchParams();
   const listId = searchParams.get(SEARCH_PARAMS.LIST);
   const watchedId = searchParams.get(SEARCH_PARAMS.WATCHED);
   const name = searchParams.get(SEARCH_PARAMS.NAME);
+  const [confetti, setConfetti] = useState(false);
 
   // TODO: If no movieId, redirect
 
-  const getList = useQuery([QUERY_KEYS.LIST, listId], () =>
+  const getList = useQuery([QUERY_KEYS.LIST_ITEMS, listId], () =>
     API.getListItems(+listId!)
   );
 
-  const getWatched = useQuery([QUERY_KEYS.LIST, watchedId], () =>
+  const getWatched = useQuery([QUERY_KEYS.LIST_ITEMS, watchedId], () =>
     API.getListItems(+watchedId!)
   );
 
-  const mutationSideEffects = {
-    onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEYS.LIST]);
-      queryClient.invalidateQueries([QUERY_KEYS.LIST_ITEMS]);
-    },
-    retry: 2,
-    retryDelay: 1000,
+  const movieAndList = {
+    movieId: movieId!,
+    targetListId: listId!,
+  };
+  const movieAndWatched = {
+    movieId: movieId!,
+    targetListId: watchedId!,
   };
 
-  const addMovie = useMutation(API.addMovieToList, mutationSideEffects);
-  const removeMovie = useMutation(API.removeMovieFromList, mutationSideEffects);
+  const { mutate: addMovieToWatchlist } = useAddMovieToList(movieAndList);
+  const { mutate: markMovieWatched } = useAddMovieToList(movieAndWatched);
 
-  if (getList.isLoading || getWatched.isLoading) {
-    return (
-      <div className="md-list-actions-container">
-        <div className="md-list-action">
-          <Bookmark style={{ opacity: 0 }} />
-          <span style={{ opacity: 0 }}>Add to List</span>
-        </div>
-        <div className="md-list-action">
-          <CheckCircle style={{ opacity: 0 }} />
-          <span style={{ opacity: 0 }}>Unwatched</span>
-        </div>
-      </div>
-    );
-  }
+  const { mutate: removeMovieFromWatchlist } =
+    useRemoveMovieFromList(movieAndList);
+  const { mutate: markMovieUnwatched } =
+    useRemoveMovieFromList(movieAndWatched);
+
+  if (getList.isLoading || getWatched.isLoading) return null;
 
   if (getList.isError || getWatched.isError) {
     return <h1>{`Error ${getList.error || getWatched.error}`}</h1>;
@@ -79,10 +78,17 @@ function ListActions() {
     (movie) => movie.movie.ids.tmdb === Number(movieId)
   );
 
+  const toggleConfetti = () => {
+    setConfetti(true);
+    setTimeout(() => {
+      setConfetti(false);
+    }, 2000);
+  };
+
   const markAsWatched = () => {
-    addMovie.mutate({ movieId: +movieId!, listId: +watchedId! });
-    !!inList && removeMovie.mutate({ movieId: +movieId!, listId: +listId! });
-    // make confetti
+    markMovieWatched();
+    !!inList && removeMovieFromWatchlist();
+    toggleConfetti();
   };
 
   return (
@@ -90,68 +96,53 @@ function ListActions() {
       <Title order={5} align="center" transform="uppercase" mt={10}>
         {name}
       </Title>
+
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Confetti active={confetti} />
+      </div>
+
       <Group grow position="apart" my={15}>
         {inList ? (
           <Button
             size="lg"
             radius="md"
             leftIcon={<BookmarkFill />}
-            onClick={() =>
-              removeMovie.mutate({ movieId: +movieId!, listId: +listId! })
-            }
+            onClick={() => removeMovieFromWatchlist()}
             sx={activeButtonRoot}
           >
             Watchlist
           </Button>
         ) : (
-          // <div
-          //   className="md-list-action"
-          //   onClick={() =>
-          //     removeMovie.mutate({ movieId: +movieId!, listId: +listId! })
-          //   }
-          // >
-          //   <BookmarkFill className="action-icon" />
-          //   <span>Added to List</span>
-          // </div>
-          // <div
-          //   className="md-list-action"
-          //   onClick={() =>
-          //     addMovie.mutate({ movieId: +movieId!, listId: +listId! })
-          //   }
-          // >
-          //   <Bookmark className="action-icon" />
-          //   <span>Add to List</span>
-          // </div>
           <Button
             size="lg"
             radius="md"
             leftIcon={<Bookmark />}
-            onClick={() =>
-              addMovie.mutate({ movieId: +movieId!, listId: +listId! })
-            }
-            styles={(theme) => ({
-              leftIcon: { color: theme.colors.blue[4] },
-              root: disabledButtonRoot,
-            })}
+            onClick={() => addMovieToWatchlist()}
+            styles={disabledButtonStyle}
           >
             Add to List
           </Button>
         )}
         {inWatched ? (
-          <div
-            className="md-list-action"
-            onClick={() =>
-              removeMovie.mutate({ movieId: +movieId!, listId: +watchedId! })
-            }
+          <Button
+            size="lg"
+            radius="md"
+            leftIcon={<CheckCircleFill />}
+            onClick={() => markMovieUnwatched()}
+            sx={activeButtonRoot}
           >
-            <CheckCircleFill className="action-icon" />
-            <span>Watched</span>
-          </div>
+            Watched
+          </Button>
         ) : (
-          <div className="md-list-action" onClick={markAsWatched}>
-            <CheckCircle className="action-icon" />
-            <span>Unwatched</span>
-          </div>
+          <Button
+            size="lg"
+            radius="md"
+            leftIcon={<CheckCircle />}
+            onClick={markAsWatched}
+            styles={disabledButtonStyle}
+          >
+            Unwatched
+          </Button>
         )}
       </Group>
     </>
