@@ -2,6 +2,7 @@ import { ActionIcon } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
 import { ChevronLeft, InfoCircle } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
+import urlJoin from 'url-join';
 import './TitleNav.scss';
 
 interface TitleNavProps {
@@ -30,7 +31,7 @@ function TitleNav({ title, info = false }: TitleNavProps) {
           <ActionIcon
             color="blue"
             onClick={() => {
-              navigate(`stats${window.location.search}`);
+              navigate(urlJoin('stats', window.location.search));
             }}
           >
             <InfoCircle size={20} />
