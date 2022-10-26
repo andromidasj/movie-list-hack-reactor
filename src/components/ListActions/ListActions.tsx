@@ -1,4 +1,4 @@
-import { Button, Group, MantineTheme, Title } from '@mantine/core';
+import { Button, CSSObject, Group, MantineTheme, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import {
@@ -16,17 +16,21 @@ import useRemoveMovieFromList from '../../hooks/useRemoveMovieFromList';
 import { API } from '../../util/api';
 import './ListActions.scss';
 
-const activeButtonRoot = {
+const activeButtonRoot: CSSObject = {
   height: 60,
-  '&:active': {
-    scale: 0.5,
+  ':active': {
+    scale: '95%',
     opacity: 0.5,
   },
 };
 
 const disabledButtonStyle = (theme: MantineTheme) => ({
   leftIcon: { color: theme.colors.blue[4] },
-  root: { ...activeButtonRoot, backgroundColor: 'black' },
+  root: {
+    ...activeButtonRoot,
+    ':active': { ...activeButtonRoot, backgroundColor: 'black' },
+    backgroundColor: 'black',
+  },
 });
 
 function ListActions() {
