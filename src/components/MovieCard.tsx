@@ -1,6 +1,6 @@
 import { AspectRatio, Image, Text } from '@mantine/core';
-import { useIntersection } from '@mantine/hooks';
 import { useQuery } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
 import { createSearchParams, Link } from 'react-router-dom';
 import urlJoin from 'url-join';
 import { QUERY_KEYS } from '../enums/QueryKeys';
@@ -16,6 +16,7 @@ interface MovieCardProps {
   listName: string;
 }
 
+const MOVIE_PATH = '/movie';
 const POSTER_PATH = 'https://www.themoviedb.org/t/p/w342';
 const IMG_RATIO = 2 / 3;
 
@@ -27,19 +28,17 @@ function MovieCard({
   watched,
   listName,
 }: MovieCardProps) {
-  const { ref, entry } = useIntersection({ threshold: 0 });
+  const { ref, entry } = useInView({ triggerOnce: true });
 
   const { data } = useQuery(
     [QUERY_KEYS.MOVIE, tmdbId],
     () => API.getMovieInfo(tmdbId),
-    {
-      enabled: !!entry?.isIntersecting,
-    }
+    { enabled: !!entry?.isIntersecting }
   );
 
   if (data) {
     const movie = data!.data;
-    const pathname = urlJoin('/movie', movie.id.toString());
+    const pathname = urlJoin(MOVIE_PATH, movie.id.toString());
     const search = createSearchParams({
       list,
       watched,
