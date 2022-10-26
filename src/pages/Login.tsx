@@ -9,8 +9,10 @@ import {
 import { useLocalStorage } from '@mantine/hooks';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import urlJoin from 'url-join';
 import { LocalStorage } from '../enums/LocalStorageKeys';
-import { API } from '../util/api';
+import { API, TRAKT_BASE_URL } from '../util/api';
+import getTraktHeaders from '../util/getTraktHeaders';
 
 const TRAKT_API_KEY = import.meta.env.VITE_TRAKT_API_KEY;
 const TRAKT_SECRET = import.meta.env.VITE_TRAKT_SECRET;
@@ -50,7 +52,7 @@ function Login() {
 
   const handleAuth = async () => {
     const obj = {
-      code: code,
+      code,
       client_id: TRAKT_API_KEY,
       client_secret: TRAKT_SECRET,
       redirect_uri: REDIRECT_URI,
@@ -62,14 +64,10 @@ function Login() {
 
       setToken(response.data.access_token);
 
-      const userInfo = await axios.get('https://api.trakt.tv/users/settings', {
-        headers: {
-          'content-type': 'application/json',
-          'trakt-api-version': '2',
-          'trakt-api-key': TRAKT_API_KEY!,
-          Authorization: `Bearer ${response.data.access_token}`,
-        },
-      });
+      const userInfo = await axios.get(
+        urlJoin(TRAKT_BASE_URL, 'users/settings'),
+        { headers: getTraktHeaders(response.data.access_token) }
+      );
 
       setUsername(userInfo.data.user.username);
 

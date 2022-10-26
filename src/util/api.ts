@@ -12,14 +12,12 @@ import { MovieCollection } from '../models/trakt/MovieCollection';
 import { NewListInput } from '../models/trakt/NewListInput';
 import { RemoveListItemsResponse } from '../models/trakt/RemoveListItemsResponse';
 import { UserSettings } from '../models/trakt/User';
+import getTraktHeaders from './getTraktHeaders';
 
 interface ListMovieInput {
   movieId: number;
   listId: number;
 }
-
-const TRAKT_API_KEY = import.meta.env.VITE_TRAKT_API_KEY;
-const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 const ACCOUNT_ID = JSON.parse(
   localStorage.getItem(LocalStorage.USER_ID) || '""'
@@ -29,35 +27,40 @@ const ACCESS_TOKEN = JSON.parse(
   localStorage.getItem(LocalStorage.ACCESS_TOKEN) || '""'
 );
 
+// TMDB
+const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const TMDB_BASE_URL = 'https://api.themoviedb.org';
+
+const TMDB = applyCaseMiddleware(axios.create({ baseURL: TMDB_BASE_URL }));
+
 const LANG = 'en-US';
-const BASE_URL = 'https://api.themoviedb.org';
 const TMDB_API_VERSION = '3';
 const WATCH_REGION = 'US';
+const TMDB_PARAMS = {
+  language: LANG,
+  api_key: TMDB_API_KEY,
+  append_to_response: [
+    'videos',
+    'credits',
+    'watch/providers',
+    'similar',
+    'recommendations',
+    'release_dates',
+  ].join(','),
+};
 
+// TRAKT
+export const TRAKT_BASE_URL = 'https://api.trakt.tv';
 const USERS = 'users';
 const LISTS = 'lists';
 const LIST_PATH = urlJoin(USERS, ACCOUNT_ID, LISTS);
 
-const TMDB = applyCaseMiddleware(axios.create({ baseURL: BASE_URL }));
-
 export const TRAKT = applyCaseMiddleware(
   axios.create({
-    baseURL: 'https://api.trakt.tv',
-    headers: {
-      Authorization: `Bearer ${ACCESS_TOKEN}`,
-      'Content-Type': 'application/json',
-      'trakt-api-version': '2',
-      'trakt-api-key': TRAKT_API_KEY!,
-    },
+    baseURL: TRAKT_BASE_URL,
+    headers: getTraktHeaders(ACCESS_TOKEN),
   })
 );
-
-const params = {
-  language: LANG,
-  api_key: TMDB_API_KEY,
-  append_to_response:
-    'videos,credits,watch/providers,similar,recommendations,release_dates',
-};
 
 export const API = {
   newList: ({
@@ -87,7 +90,7 @@ export const API = {
 
   getMovieInfo: (movieId: number): AxiosPromise<TmdbMovie> =>
     TMDB.get(urlJoin(TMDB_API_VERSION, 'movie', String(movieId)), {
-      params,
+      params: TMDB_PARAMS,
     }),
 
   addMovieToList: ({
