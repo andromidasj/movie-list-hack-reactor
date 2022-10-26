@@ -1,8 +1,7 @@
 import { ActionIcon } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
-import { BarChartFill, ChevronLeft } from 'react-bootstrap-icons';
+import { ChevronLeft, InfoCircle } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
-
 import './TitleNav.scss';
 
 interface TitleNavProps {
@@ -34,7 +33,7 @@ function TitleNav({ title, info = false }: TitleNavProps) {
               navigate(`stats${window.location.search}`);
             }}
           >
-            <BarChartFill size={20} />
+            <InfoCircle size={20} />
           </ActionIcon>
         )}
       </div>
