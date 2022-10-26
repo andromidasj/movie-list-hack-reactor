@@ -4,9 +4,10 @@ import {
   Container,
   Image,
   Space,
+  Stack,
   TextInput,
 } from '@mantine/core';
-import { useLocalStorage } from '@mantine/hooks';
+import { useInputState, useLocalStorage } from '@mantine/hooks';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import urlJoin from 'url-join';
@@ -23,7 +24,7 @@ const TOKEN_URL = 'https://api.trakt.tv/oauth/token';
 
 function Login() {
   const [clickedLogin, setClickedLogin] = useState(false);
-  const [code, setCode] = useState('');
+  const [code, setCode] = useInputState('');
   const [error, setError] = useState<React.ReactElement | null>(null);
 
   const [, setToken] = useLocalStorage({ key: LocalStorage.ACCESS_TOKEN });
@@ -78,35 +79,29 @@ function Login() {
   };
 
   return (
-    <>
+    <Stack spacing={50}>
       <div className="lists-title-container">
         <h1 className="page-title-large">Login</h1>
       </div>
 
-      <Space h={50} />
       <Center>
         <Button
           color="dark"
           radius="md"
           size="xl"
           onClick={authRedirect}
-          rightIcon={
-            <Image width={30} height={30} src={'/trakt-icon-red.svg'} />
-          }
+          rightIcon={<Image width={30} height={30} src="/trakt-icon-red.svg" />}
         >
           Login with Trakt
         </Button>
       </Center>
-      <Space h={50} />
 
       {clickedLogin && (
         <Container px="xl">
           <TextInput
             radius="md"
             placeholder="Insert code here"
-            onChange={(e) => {
-              setCode(e.target.value);
-            }}
+            onChange={setCode}
             size="xl"
           />
           <Space h="lg" />
@@ -117,7 +112,7 @@ function Login() {
       )}
 
       {error}
-    </>
+    </Stack>
   );
 }
 

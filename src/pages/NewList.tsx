@@ -27,7 +27,6 @@ function NewList() {
     onSuccess: (data) => {
       console.log('Successfully created list', data);
     },
-    // retry: 3,
   });
 
   const navigate = useNavigate();
@@ -101,9 +100,7 @@ function NewList() {
           checked={privacy === 'private'}
           label="Private list"
           size="xl"
-          onChange={() => {
-            togglePrivacy();
-          }}
+          onChange={() => togglePrivacy()}
           color="green"
         />
         <Center>
