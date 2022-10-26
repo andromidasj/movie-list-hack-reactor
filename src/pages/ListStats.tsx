@@ -15,15 +15,16 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import TitleNav from '../components/TitleNav/TitleNav';
 import { QUERY_KEYS } from '../enums/QueryKeys';
+import { SEARCH_PARAMS } from '../enums/SearchParams';
 import { ListItems } from '../models/trakt/ListItems';
 import { API } from '../util/api';
 import './ListStats.scss';
 
 function ListStats() {
   const [searchParams] = useSearchParams();
-  const listId = searchParams.get('list');
-  const watchedId = searchParams.get('watched');
-  const name = searchParams.get('name');
+  const listId = searchParams.get(SEARCH_PARAMS.LIST);
+  const watchedId = searchParams.get(SEARCH_PARAMS.WATCHED);
+  const name = searchParams.get(SEARCH_PARAMS.NAME);
   const navigate = useNavigate();
 
   const [modalOpened, setModalOpened] = useState(false);

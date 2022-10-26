@@ -7,6 +7,7 @@ import {
 } from 'react-bootstrap-icons';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { QUERY_KEYS } from '../../enums/QueryKeys';
+import { SEARCH_PARAMS } from '../../enums/SearchParams';
 import { API } from '../../util/api';
 import './ListActions.scss';
 
@@ -14,9 +15,9 @@ function ListActions() {
   const queryClient = useQueryClient();
   const { movieId } = useParams();
   const [searchParams] = useSearchParams();
-  const listId = searchParams.get('list');
-  const watchedId = searchParams.get('watched');
-  const name = searchParams.get('name');
+  const listId = searchParams.get(SEARCH_PARAMS.LIST);
+  const watchedId = searchParams.get(SEARCH_PARAMS.WATCHED);
+  const name = searchParams.get(SEARCH_PARAMS.NAME);
 
   // TODO: If no movieId, redirect
 

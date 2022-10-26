@@ -6,6 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import MovieCard from '../components/MovieCard';
 import { QUERY_KEYS } from '../enums/QueryKeys';
+import { SEARCH_PARAMS } from '../enums/SearchParams';
 import useStore from '../store';
 import { API } from '../util/api';
 
@@ -15,8 +16,8 @@ interface SearchProps {
 
 function Search({ listName }: SearchProps) {
   const [searchParams] = useSearchParams();
-  const listId = searchParams.get('list');
-  const watchedId = searchParams.get('watched');
+  const listId = searchParams.get(SEARCH_PARAMS.LIST);
+  const watchedId = searchParams.get(SEARCH_PARAMS.WATCHED);
 
   const searchQuery = useStore((state) => state.searchQuery);
   const [debouncedQuery] = useDebouncedValue(searchQuery, 500);

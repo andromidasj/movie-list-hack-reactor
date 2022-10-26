@@ -57,7 +57,7 @@ function Movies({ movies, list, watched, listName }: MoviesProps) {
         >
           <Film size={80} />
           <Space />
-          <Title order={2}>No movies. </Title>
+          <Title order={2}>No movies.</Title>
           <Title order={3}>Search one?</Title>
           <Image
             src={arrow}

@@ -1,8 +1,6 @@
 import { TextInput } from '@mantine/core';
-import React from 'react';
 import { Search, XCircleFill } from 'react-bootstrap-icons';
 import useStore from '../../store';
-import './SearchBar.scss';
 
 function SearchBar() {
   const searchQuery = useStore((state) => state.searchQuery);
@@ -11,7 +9,6 @@ function SearchBar() {
   const activeSearch = searchQuery.length > 0;
 
   return (
-    // <div className="search-bar-container">
     <div
       style={{
         width: '100vw',
@@ -42,7 +39,6 @@ function SearchBar() {
         />
       )}
     </div>
-    // </div>
   );
 }
 
