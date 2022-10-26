@@ -1,3 +1,4 @@
+import { Button, Group, Title } from '@mantine/core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Bookmark,
@@ -10,6 +11,16 @@ import { QUERY_KEYS } from '../../enums/QueryKeys';
 import { SEARCH_PARAMS } from '../../enums/SearchParams';
 import { API } from '../../util/api';
 import './ListActions.scss';
+
+const activeButtonRoot = {
+  height: 60,
+  '&:active': {
+    scale: 0.5,
+    opacity: 0.5,
+  },
+};
+
+const disabledButtonRoot = { ...activeButtonRoot, backgroundColor: 'black' };
 
 function ListActions() {
   const queryClient = useQueryClient();
@@ -34,6 +45,8 @@ function ListActions() {
       queryClient.invalidateQueries([QUERY_KEYS.LIST]);
       queryClient.invalidateQueries([QUERY_KEYS.LIST_ITEMS]);
     },
+    retry: 2,
+    retryDelay: 1000,
   };
 
   const addMovie = useMutation(API.addMovieToList, mutationSideEffects);
@@ -66,53 +79,81 @@ function ListActions() {
     (movie) => movie.movie.ids.tmdb === Number(movieId)
   );
 
+  const markAsWatched = () => {
+    addMovie.mutate({ movieId: +movieId!, listId: +watchedId! });
+    !!inList && removeMovie.mutate({ movieId: +movieId!, listId: +listId! });
+    // make confetti
+  };
+
   return (
     <>
-      <h4 className="md-list-title">{name}</h4>
-      <div className="md-list-actions-container">
+      <Title order={5} align="center" transform="uppercase" mt={10}>
+        {name}
+      </Title>
+      <Group grow position="apart" my={15}>
         {inList ? (
-          <div
-            className="md-list-action"
-            onClick={() => {
-              removeMovie.mutate({ movieId: +movieId!, listId: +listId! });
-            }}
+          <Button
+            size="lg"
+            radius="md"
+            leftIcon={<BookmarkFill />}
+            onClick={() =>
+              removeMovie.mutate({ movieId: +movieId!, listId: +listId! })
+            }
+            sx={activeButtonRoot}
           >
-            <BookmarkFill className="action-icon" />
-            <span>Added to List</span>
-          </div>
+            Watchlist
+          </Button>
         ) : (
-          <div
-            className="md-list-action"
-            onClick={() => {
-              addMovie.mutate({ movieId: +movieId!, listId: +listId! });
-            }}
+          // <div
+          //   className="md-list-action"
+          //   onClick={() =>
+          //     removeMovie.mutate({ movieId: +movieId!, listId: +listId! })
+          //   }
+          // >
+          //   <BookmarkFill className="action-icon" />
+          //   <span>Added to List</span>
+          // </div>
+          // <div
+          //   className="md-list-action"
+          //   onClick={() =>
+          //     addMovie.mutate({ movieId: +movieId!, listId: +listId! })
+          //   }
+          // >
+          //   <Bookmark className="action-icon" />
+          //   <span>Add to List</span>
+          // </div>
+          <Button
+            size="lg"
+            radius="md"
+            leftIcon={<Bookmark />}
+            onClick={() =>
+              addMovie.mutate({ movieId: +movieId!, listId: +listId! })
+            }
+            styles={(theme) => ({
+              leftIcon: { color: theme.colors.blue[4] },
+              root: disabledButtonRoot,
+            })}
           >
-            <Bookmark className="action-icon" />
-            <span>Add to List</span>
-          </div>
+            Add to List
+          </Button>
         )}
         {inWatched ? (
           <div
             className="md-list-action"
-            onClick={() => {
-              removeMovie.mutate({ movieId: +movieId!, listId: +watchedId! });
-            }}
+            onClick={() =>
+              removeMovie.mutate({ movieId: +movieId!, listId: +watchedId! })
+            }
           >
             <CheckCircleFill className="action-icon" />
             <span>Watched</span>
           </div>
         ) : (
-          <div
-            className="md-list-action"
-            onClick={() => {
-              addMovie.mutate({ movieId: +movieId!, listId: +watchedId! });
-            }}
-          >
+          <div className="md-list-action" onClick={markAsWatched}>
             <CheckCircle className="action-icon" />
             <span>Unwatched</span>
           </div>
         )}
-      </div>
+      </Group>
     </>
   );
 }
