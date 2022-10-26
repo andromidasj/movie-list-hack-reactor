@@ -36,6 +36,7 @@ const TMDB = applyCaseMiddleware(axios.create({ baseURL: TMDB_BASE_URL }));
 const LANG = 'en-US';
 const TMDB_API_VERSION = '3';
 const WATCH_REGION = 'US';
+const MOVIE = 'movie';
 const TMDB_PARAMS = {
   language: LANG,
   api_key: TMDB_API_KEY,
@@ -53,6 +54,7 @@ const TMDB_PARAMS = {
 export const TRAKT_BASE_URL = 'https://api.trakt.tv';
 const USERS = 'users';
 const LISTS = 'lists';
+const ITEMS = 'items';
 const LIST_PATH = urlJoin(USERS, ACCOUNT_ID, LISTS);
 
 export const TRAKT = applyCaseMiddleware(
@@ -83,13 +85,13 @@ export const API = {
     TRAKT.get(urlJoin(LIST_PATH, String(listId))),
 
   getListItems: (listId: number): AxiosPromise<ListItems[]> =>
-    TRAKT.get(urlJoin(LIST_PATH, String(listId), 'items')),
+    TRAKT.get(urlJoin(LIST_PATH, String(listId), ITEMS)),
 
   getCollection: (): AxiosPromise<MovieCollection[]> =>
     TRAKT.get('sync/collection/movies'),
 
   getMovieInfo: (movieId: number): AxiosPromise<TmdbMovie> =>
-    TMDB.get(urlJoin(TMDB_API_VERSION, 'movie', String(movieId)), {
+    TMDB.get(urlJoin(TMDB_API_VERSION, MOVIE, String(movieId)), {
       params: TMDB_PARAMS,
     }),
 
@@ -97,7 +99,7 @@ export const API = {
     movieId,
     listId,
   }: ListMovieInput): AxiosPromise<AddListItemsResponse> =>
-    TRAKT.post(urlJoin(LIST_PATH, String(listId), 'items'), {
+    TRAKT.post(urlJoin(LIST_PATH, String(listId), ITEMS), {
       movies: [{ ids: { tmdb: movieId } }],
     }),
 
@@ -105,12 +107,12 @@ export const API = {
     movieId,
     listId,
   }: ListMovieInput): AxiosPromise<RemoveListItemsResponse> =>
-    TRAKT.post(urlJoin(LIST_PATH, String(listId), 'items/remove'), {
+    TRAKT.post(urlJoin(LIST_PATH, String(listId), ITEMS, 'remove'), {
       movies: [{ ids: { tmdb: movieId } }],
     }),
 
   search: (query: string): AxiosPromise<SearchResponse> =>
-    TMDB.get(urlJoin(TMDB_API_VERSION, 'search/movie'), {
+    TMDB.get(urlJoin(TMDB_API_VERSION, 'search', MOVIE), {
       params: {
         query,
         api_key: TMDB_API_KEY,
@@ -127,7 +129,7 @@ export const API = {
     TRAKT.get(urlJoin(USERS, 'settings')),
 
   getWatchProviders: (): AxiosPromise<WatchProviderResponse> =>
-    TMDB.get(urlJoin(TMDB_API_VERSION, 'watch/providers/movie'), {
+    TMDB.get(urlJoin(TMDB_API_VERSION, 'watch/providers', MOVIE), {
       params: {
         api_key: TMDB_API_KEY,
         language: LANG,

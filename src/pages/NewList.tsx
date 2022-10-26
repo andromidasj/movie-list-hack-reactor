@@ -33,7 +33,11 @@ function NewList() {
 
   const handleSubmit = () => {
     const watchedName = '__' + name;
-    const watchlist = { name, description, privacy };
+    const watchlist = {
+      name,
+      description,
+      privacy,
+    };
     const watched = {
       name: watchedName,
       description: `Accompanying watched list for "${name}".\n`,

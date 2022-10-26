@@ -33,29 +33,25 @@ function Search({ listName }: SearchProps) {
   if (isError) return <h1>Error</h1>;
 
   return (
-    <>
-      {data && (
-        <Container my={135}>
-          <SimpleGrid cols={3}>
-            {data.data.results.map((movie) => {
-              if (movie.posterPath) {
-                return (
-                  <MovieCard
-                    tmdbId={movie.id}
-                    title={movie.title}
-                    year={movie.releaseDate?.substring(0, 4)}
-                    list={listId}
-                    watched={watchedId}
-                    key={uuid()}
-                    listName={listName}
-                  />
-                );
-              }
-            })}
-          </SimpleGrid>
-        </Container>
-      )}
-    </>
+    <Container my={135}>
+      <SimpleGrid cols={3}>
+        {data.data.results.map((movie) => {
+          if (movie.posterPath) {
+            return (
+              <MovieCard
+                tmdbId={movie.id}
+                title={movie.title}
+                year={movie.releaseDate?.substring(0, 4)}
+                list={listId}
+                watched={watchedId}
+                key={uuid()}
+                listName={listName}
+              />
+            );
+          }
+        })}
+      </SimpleGrid>
+    </Container>
   );
 }
 
