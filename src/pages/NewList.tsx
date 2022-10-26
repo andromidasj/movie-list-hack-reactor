@@ -11,7 +11,7 @@ import {
 import { useInputState, useToggle } from '@mantine/hooks';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { ExclamationCircle } from 'react-bootstrap-icons';
+import { ExclamationCircle, Lock, Unlock } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import TitleNav from '../components/TitleNav/TitleNav';
 import { API } from '../util/api';
@@ -106,6 +106,8 @@ function NewList() {
           size="xl"
           onChange={() => togglePrivacy()}
           color="green"
+          onLabel={<Lock />}
+          offLabel={<Unlock />}
         />
         <Center>
           <Button

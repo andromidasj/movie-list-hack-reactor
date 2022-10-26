@@ -9,7 +9,7 @@ import {
   ThemeIcon,
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import { CollectionPlay } from 'react-bootstrap-icons';
+import { CollectionPlayFill } from 'react-bootstrap-icons';
 import uuid from 'react-uuid';
 import { QUERY_KEYS } from '../../enums/QueryKeys';
 import { Flatrate } from '../../models/tmdb/TmdbMovie';
@@ -75,7 +75,7 @@ function WatchProviders({ providers, title }: WatchProvidersProps) {
       <Container style={containerStyle} key={uuid()}>
         <Group noWrap position="apart">
           <ThemeIcon size={50} variant="outline" radius="md">
-            <CollectionPlay className="wp-logo-collected" size={60} />
+            <CollectionPlayFill className="wp-logo-collected" size={60} />
           </ThemeIcon>
           <Container>
             <Text align="center">Collection</Text>
