@@ -19,7 +19,7 @@ interface MovieCardProps {
 const MOVIE_PATH = '/movie';
 const POSTER_PATH = 'https://www.themoviedb.org/t/p/w342';
 const IMG_RATIO = 2 / 3;
-const CARD_HEIGHT = 167;
+const CARD_HEIGHT = 170;
 
 function MovieCard({
   tmdbId,

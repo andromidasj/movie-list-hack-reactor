@@ -6,16 +6,15 @@ import {
   Space,
   Stack,
   Text,
-  ThemeIcon,
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import { CollectionPlayFill } from 'react-bootstrap-icons';
 import uuid from 'react-uuid';
 import { QUERY_KEYS } from '../../enums/QueryKeys';
 import { Flatrate } from '../../models/tmdb/TmdbMovie';
 import { MovieCollection } from '../../models/trakt/MovieCollection';
 import useStore from '../../store';
 import { API } from '../../util/api';
+import CollectionBar from './CollectionBar';
 import './WatchProviders.scss';
 
 interface WatchProvidersProps {
@@ -23,8 +22,9 @@ interface WatchProvidersProps {
   title: string;
 }
 
-const containerStyle = {
-  width: '70vw',
+export const containerStyle = {
+  width: '100%',
+  height: 80,
   backgroundColor: '#000',
   borderRadius: 15,
   padding: 10,
@@ -60,35 +60,25 @@ function WatchProviders({ providers, title }: WatchProvidersProps) {
           <Image
             src={URL + provider.logoPath}
             radius="md"
-            height={50}
-            width={50}
+            height={60}
+            width={60}
           />
           <Container>
-            <Text align="center">{provider.providerName}</Text>
+            <Text align="center" size={22} weight="bold">
+              {provider.providerName}
+            </Text>
           </Container>
         </Group>
       </Container>
     )) || [];
 
   if (collected) {
-    providersArr.push(
-      <Container style={containerStyle} key={uuid()}>
-        <Group noWrap position="apart">
-          <ThemeIcon size={50} variant="outline" radius="md">
-            <CollectionPlayFill className="wp-logo-collected" size={60} />
-          </ThemeIcon>
-          <Container>
-            <Text align="center">Collection</Text>
-          </Container>
-        </Group>
-      </Container>
-    );
+    providersArr.push(<CollectionBar />);
   }
 
   return (
-    <>
+    <Stack>
       <h2>Available on</h2>
-      <Space h="lg" />
       <Stack>
         {providersArr.length ? (
           providersArr
@@ -97,7 +87,7 @@ function WatchProviders({ providers, title }: WatchProvidersProps) {
         )}
       </Stack>
       <Space h="xl" />
-    </>
+    </Stack>
   );
 }
 
