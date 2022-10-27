@@ -24,12 +24,14 @@ const activeButtonRoot: CSSObject = {
   },
 };
 
+const DISABLED_BUTTON_COLOR = 'black';
+
 const disabledButtonStyle = (theme: MantineTheme) => ({
   leftIcon: { color: theme.colors.blue[4] },
   root: {
     ...activeButtonRoot,
-    ':active': { ...activeButtonRoot, backgroundColor: 'black' },
-    backgroundColor: 'black',
+    ':active': { ...activeButtonRoot, backgroundColor: DISABLED_BUTTON_COLOR },
+    backgroundColor: DISABLED_BUTTON_COLOR,
   },
 });
 
