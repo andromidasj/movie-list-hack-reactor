@@ -1,14 +1,14 @@
 name: Node Continuous Integration
 
 on:
-  pull_request:
+  push:
     branches:
       - 'main'
     tags:
       - 'v*'
 
 jobs:
-  test_pull_request:
+  test_push:
     runs-on: ubuntu-latest
     steps:
       -
