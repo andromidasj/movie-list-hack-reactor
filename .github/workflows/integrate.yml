@@ -5,7 +5,7 @@ on:
     branches:
       - 'main'
     tags:
-      - 'v*'
+      - 'v*.*.*'
 
 jobs:
   test_push:
@@ -24,7 +24,7 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       -
-        name: Build and push
+        name: Build and push (${{ github.ref_name }})
         uses: docker/build-push-action@v3
         with:
           context: .
