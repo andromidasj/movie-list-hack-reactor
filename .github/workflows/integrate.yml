@@ -31,3 +31,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/trakt-movie-list:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/trakt-movie-list:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/trakt-movie-list:buildcache,mode=max
