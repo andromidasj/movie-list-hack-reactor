@@ -2,7 +2,10 @@ name: Node Continuous Integration
 
 on:
   pull_request:
-    branches: [ main ]
+    branches:
+      - 'main'
+    tags:
+      - 'v*'
 
 jobs:
   test_pull_request:
