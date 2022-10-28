@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     branches: [main]
-    tags: ['v*.*.*']
 
 env:
   REPO: ${{ secrets.DOCKER_HUB_USERNAME }}/trakt-movie-list
