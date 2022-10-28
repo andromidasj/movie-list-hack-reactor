@@ -12,7 +12,7 @@ interface ListItemArray {
   data: ListItems[];
 }
 
-console.log("this shouldn't run CI");
+console.log('test push to main');
 
 function useAddMovieToList({ movieId, targetListId }: MovieListInputs) {
   const queryClient = useQueryClient();
