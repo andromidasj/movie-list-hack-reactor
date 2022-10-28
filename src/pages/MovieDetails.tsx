@@ -72,7 +72,7 @@ function MovieDetails() {
         >
           <p>{movie.overview}</p>
         </Spoiler>
-        <ListActions />
+        <ListActions movieId={movieId!} />
         {video && (
           <iframe src={trailerLink} title="movie trailer" className="trailer" />
         )}

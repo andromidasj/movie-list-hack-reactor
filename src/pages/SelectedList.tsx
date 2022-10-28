@@ -1,6 +1,5 @@
 import { Alert, Loader } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import _ from 'lodash';
 import { ExclamationCircle } from 'react-bootstrap-icons';
 import { useSearchParams } from 'react-router-dom';
 import SearchBar from '../components/SearchBar/SearchBar';
@@ -11,8 +10,6 @@ import Search from '../containers/Search';
 import { QUERY_KEYS } from '../enums/QueryKeys';
 import useStore from '../store';
 import { API } from '../util/api';
-
-const SORT_KEY = 'listedAt';
 
 function SelectedList() {
   const [searchParams] = useSearchParams();
@@ -29,7 +26,7 @@ function SelectedList() {
     isLoading: isLoadingList,
     isError: isErrorList,
   } = useQuery([QUERY_KEYS.LIST_ITEMS, listId], () =>
-    API.getListItems(+listId!)
+    API.getListItems(listId!)
   );
 
   const {
@@ -37,7 +34,7 @@ function SelectedList() {
     isLoading: isLoadingWatched,
     isError: isErrorWatched,
   } = useQuery([QUERY_KEYS.LIST_ITEMS, watchedId], () =>
-    API.getListItems(+watchedId!)
+    API.getListItems(watchedId!)
   );
 
   if (isErrorList || isErrorWatched) {
@@ -61,18 +58,12 @@ function SelectedList() {
     );
   }
 
-  const listFiltered = _.orderBy(
-    list?.data.results.filter((movie) =>
-      movie.title.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
-    SORT_KEY
+  const listFiltered = list?.data.items.filter((movie) =>
+    movie.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const watchedFiltered = _.orderBy(
-    watched?.data.results.filter((movie) =>
-      movie.title.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
-    SORT_KEY
+  const watchedFiltered = watched?.data.items.filter((movie) =>
+    movie.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -88,7 +79,7 @@ function SelectedList() {
             <Loader className="body-loader" />
           ) : (
             <Movies
-              movies={listFiltered}
+              movies={listFiltered!}
               list={listId!}
               watched={watchedId!}
               listName={name}
@@ -103,7 +94,7 @@ function SelectedList() {
             <Loader className="body-loader" />
           ) : (
             <Movies
-              movies={watchedFiltered}
+              movies={watchedFiltered!}
               list={listId!}
               watched={watchedId!}
               listName={name}

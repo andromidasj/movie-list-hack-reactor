@@ -16,6 +16,11 @@ export interface ListItems {
   person?: Person;
 }
 
+export interface ItemPresent {
+  id?: number | null;
+  itemPresent: boolean;
+}
+
 export function createListItem(id: number): ListItems {
   return {
     rank: 0,
