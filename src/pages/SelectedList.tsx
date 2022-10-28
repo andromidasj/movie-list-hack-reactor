@@ -62,15 +62,15 @@ function SelectedList() {
   }
 
   const listFiltered = _.orderBy(
-    list?.data.filter((movie) =>
-      movie.movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+    list?.data.results.filter((movie) =>
+      movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     ),
     SORT_KEY
   );
 
   const watchedFiltered = _.orderBy(
-    watched?.data.filter((movie) =>
-      movie.movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+    watched?.data.results.filter((movie) =>
+      movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     ),
     SORT_KEY
   );
@@ -89,8 +89,8 @@ function SelectedList() {
           ) : (
             <Movies
               movies={listFiltered}
-              list={listId}
-              watched={watchedId}
+              list={listId!}
+              watched={watchedId!}
               listName={name}
             />
           )}
@@ -104,8 +104,8 @@ function SelectedList() {
           ) : (
             <Movies
               movies={watchedFiltered}
-              list={listId}
-              watched={watchedId}
+              list={listId!}
+              watched={watchedId!}
               listName={name}
             />
           )}

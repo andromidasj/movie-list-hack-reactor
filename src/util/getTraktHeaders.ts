@@ -1,10 +1,10 @@
-const TRAKT_API_KEY = import.meta.env.VITE_TRAKT_API_KEY;
+const TRAKT_SECRET = import.meta.env.VITE_TRAKT_SECRET;
 
-export default function getTraktHeaders(token: string) {
+export default function getTraktHeaders() {
   return {
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${TRAKT_SECRET}`,
     'content-type': 'application/json',
     'trakt-api-version': '2',
-    'trakt-api-key': TRAKT_API_KEY!,
+    'trakt-api-key': TRAKT_SECRET,
   };
 }

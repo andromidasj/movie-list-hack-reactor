@@ -44,7 +44,8 @@ function Lists() {
 
   if (isError) navigate('/login');
 
-  const lists = data!.data;
+  console.log('🚀 ~ Lists ~ data', data);
+  const lists = data!.data.results;
   const listInfoArray: ListInfoTuple[] = [];
 
   const watched = lists.filter((list) => list.name.startsWith('__'));
@@ -53,12 +54,7 @@ function Lists() {
   watchList.forEach((list) => {
     const w = watched.find((watched) => watched.name === `__${list.name}`);
     if (w) {
-      listInfoArray.push([
-        list.ids.trakt!,
-        w.ids.trakt!,
-        list.name,
-        list.itemCount,
-      ]);
+      listInfoArray.push([list.id!, w.id!, list.name, list.itemCount]);
     }
   });
 

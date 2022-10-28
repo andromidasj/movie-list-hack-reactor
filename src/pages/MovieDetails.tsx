@@ -11,8 +11,9 @@ import { API } from '../util/api';
 import parseMovieDetails from '../util/parseMovieDetails';
 import './MovieDetails.scss';
 
-const BACKDROP_URL = 'https://image.tmdb.org/t/p/w780';
-const ACTOR_IMAGE_URL = 'https://image.tmdb.org/t/p/w342';
+const BASE_URL = 'https://image.tmdb.org/t/p/';
+const BACKDROP_URL = BASE_URL + 'w780';
+const ACTOR_IMAGE_URL = BASE_URL + 'w342';
 
 function MovieDetails() {
   const { movieId } = useParams();

@@ -1,6 +1,6 @@
 import { Button, CSSObject, Group, MantineTheme, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Bookmark,
   BookmarkFill,
@@ -41,17 +41,33 @@ function ListActions() {
   const listId = searchParams.get(SEARCH_PARAMS.LIST);
   const watchedId = searchParams.get(SEARCH_PARAMS.WATCHED);
   const name = searchParams.get(SEARCH_PARAMS.NAME);
+
   const [confetti, setConfetti] = useState(false);
+  const [inList2, setInList2] = useState(false);
+  const [inWatched2, setInWatched2] = useState(false);
 
   // TODO: If no movieId, redirect
 
-  const getList = useQuery([QUERY_KEYS.LIST_ITEMS, listId], () =>
-    API.getListItems(+listId!)
-  );
+  useEffect(() => {
+    async function checkListStatus() {
+      try {
+        const resList = await API.checkIsInList(listId!, movieId!);
+        console.log('🚀 ~ checkListStatus ~ resList', resList);
+        if (resList.data.success) {
+          setInList2(true);
+        }
+      } catch (err) {}
 
-  const getWatched = useQuery([QUERY_KEYS.LIST_ITEMS, watchedId], () =>
-    API.getListItems(+watchedId!)
-  );
+      try {
+        const resWatched = await API.checkIsInList(watchedId!, movieId!);
+        console.log('🚀 ~ checkListStatus ~ resWatched', resWatched);
+        if (resWatched.data.success) {
+          setInWatched2(true);
+        }
+      } catch (err) {}
+    }
+    checkListStatus();
+  });
 
   const movieAndList = {
     movieId: movieId!,
@@ -64,25 +80,27 @@ function ListActions() {
 
   const { mutate: addMovieToWatchlist } = useAddMovieToList(movieAndList);
   const { mutate: markMovieWatched } = useAddMovieToList(movieAndWatched);
-
   const { mutate: removeMovieFromWatchlist } =
     useRemoveMovieFromList(movieAndList);
   const { mutate: markMovieUnwatched } =
     useRemoveMovieFromList(movieAndWatched);
 
-  if (getList.isLoading || getWatched.isLoading) return null;
-
-  if (getList.isError || getWatched.isError) {
-    return <h1>{`Error ${getList.error || getWatched.error}`}</h1>;
-  }
-
-  const inList = getList.data!.data.find(
-    (movie) => movie.movie.ids.tmdb === Number(movieId)
+  const inListCheck = useQuery(
+    [QUERY_KEYS.IS_IN_LIST, movieId, listId],
+    () => API.checkIsInList(listId!, movieId!),
+    { retry: false }
   );
 
-  const inWatched = getWatched.data!.data.find(
-    (movie) => movie.movie.ids.tmdb === Number(movieId)
+  const inWatchedCheck = useQuery(
+    [QUERY_KEYS.IS_IN_LIST, movieId, watchedId],
+    () => API.checkIsInList(watchedId!, movieId!),
+    { retry: false }
   );
+
+  if (inListCheck.isLoading || inWatchedCheck.isLoading) return null;
+
+  const inList = !!inListCheck.data;
+  const inWatched = !!inWatchedCheck.data;
 
   const toggleConfetti = () => {
     setConfetti(true);

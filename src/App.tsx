@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { Route, Routes } from 'react-router-dom';
 
 import './App.scss';
 import Lists from './pages/Lists';
@@ -12,15 +12,11 @@ import Settings from './pages/Settings';
 import { API } from './util/api';
 
 function App() {
-  const location = useLocation();
+  const { data, isLoading, isError } = useQuery(['account'], API.getAccount);
 
-  useEffect(() => {
-    if (location.pathname !== '/login') {
-      API.getStats().catch(() => {
-        window.location.replace('/login');
-      });
-    }
-  }, [location]);
+  if (isLoading || isError) return <p>...</p>;
+
+  localStorage.setItem('tmdb_account_id', data.data.id);
 
   return (
     <div className="App">

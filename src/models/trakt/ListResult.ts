@@ -1,7 +1,7 @@
-import { TraktId } from "./TraktId";
-import { User } from "./User";
+import { TraktId } from './TraktId';
+import { User } from './User';
 
-export interface ListResult {
+interface ListResult {
   name: string;
   description: string;
   privacy: string;
