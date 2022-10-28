@@ -16,7 +16,7 @@ import uuid from 'react-uuid';
 import TitleNav from '../components/TitleNav/TitleNav';
 import { QUERY_KEYS } from '../enums/QueryKeys';
 import { SEARCH_PARAMS } from '../enums/SearchParams';
-import { ListItems } from '../models/trakt/ListItems';
+import { TmdbMovie } from '../models/tmdb/TmdbMovie';
 import { API } from '../util/api';
 import './ListStats.scss';
 
@@ -30,42 +30,21 @@ function ListStats() {
   const [modalOpened, setModalOpened] = useState(false);
   const deleteList = useMutation(API.deleteLists);
 
-  const list = useQuery([QUERY_KEYS.LIST_INFO, listId], () =>
-    API.getListInfo(+listId!)
+  const { data: list } = useQuery([QUERY_KEYS.LIST_ITEMS, listId], () =>
+    API.getListItems(listId!)
   );
-  const watched = useQuery([QUERY_KEYS.LIST_INFO, watchedId], () =>
-    API.getListInfo(+watchedId!)
-  );
-
-  const { data: listItems } = useQuery([QUERY_KEYS.LIST_ITEMS, listId], () =>
-    API.getListItems(+listId!)
+  const { data: watched } = useQuery([QUERY_KEYS.LIST_ITEMS, watchedId], () =>
+    API.getListItems(watchedId!)
   );
 
-  const { data: watchedItems } = useQuery(
-    [QUERY_KEYS.LIST_ITEMS, watchedId],
-    () => API.getListItems(+watchedId!)
-  );
+  const detailsData = [{ title: 'Name', value: name }];
 
-  const detailsData = [
-    {
-      title: 'Name',
-      value: name,
-    },
-    {
-      title: 'Description',
-      value: list.data?.data.description || '',
-    },
-  ];
+  !!list?.data.description &&
+    detailsData.push({ title: 'Description', value: list?.data.description });
 
   const statsData = [
-    {
-      title: 'Watched Movies',
-      value: watched.data?.data.itemCount,
-    },
-    {
-      title: 'Movies left to watch',
-      value: list.data?.data.itemCount,
-    },
+    { title: 'Watched Movies', value: watched?.data.itemCount },
+    { title: 'Movies left to watch', value: list?.data.itemCount },
   ];
 
   const handleListDelete = () => {
@@ -82,26 +61,27 @@ function ListStats() {
   };
 
   const handleDownload = (): void => {
-    if (!listItems || !watchedItems) return;
+    // if (!listItems || !watchedItems) return;
 
     let csvContent = 'data:text/csv;charset=utf-8,';
-    csvContent += 'watched?,trakt_id,tmdb_id,imdb_id,title,year\n';
+    csvContent += 'watched?,tmdb_id,title,year\n';
 
-    const appendMovieVals = (movie: ListItems, row: string[]) => {
-      row.push(movie.movie.ids.trakt?.toString() || '');
-      row.push(movie.movie.ids.tmdb?.toString() || '');
-      row.push(movie.movie.ids.imdb?.toString() || '');
-      row.push(`"${movie.movie.title}"`);
-      row.push(movie.movie.year.toString() || '');
+    const appendMovieVals = (movie: TmdbMovie, row: string[]) => {
+      // row.push(movie.ids.trakt?.toString() || '');
+      // console.log(movie);
+      row.push(movie.id + '');
+      // row.push(movie.imdbId + '');
+      row.push(`"${movie.title}"`);
+      row.push(movie.releaseDate.substring(0, 4));
     };
 
-    listItems.data.forEach((movie) => {
+    list?.data.items.forEach((movie) => {
       let newRow = ['false'];
       appendMovieVals(movie, newRow);
       csvContent += newRow.join(',') + '\n';
     });
 
-    watchedItems.data.forEach((movie) => {
+    watched?.data.items.forEach((movie) => {
       let newRow = ['true'];
       appendMovieVals(movie, newRow);
       csvContent += newRow.join(',') + '\n';

@@ -3,7 +3,6 @@ export enum QUERY_KEYS {
   COLLECTION = 'collection',
   IS_IN_LIST = 'in-list',
   LIST = 'list',
-  LIST_INFO = 'list_info',
   LIST_ITEMS = 'list_items',
   MOVIE = 'movie',
   SEARCH = 'search',

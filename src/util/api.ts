@@ -87,9 +87,6 @@ export const API = {
   getLists: (): AxiosPromise<AllLists> =>
     TMDB.get(urlJoin(V3, 'account', TMDB_ACCOUNT_ID, 'lists')),
 
-  // getListInfo: (listId: string): AxiosPromise<AllLists> =>
-  //   TMDB.get(urlJoin(V4, 'list', listId)),
-
   checkIsInList: (listId: string, movieId: string): AxiosPromise<ItemPresent> =>
     TMDB.get(urlJoin(V3, 'list', listId, 'item_status'), {
       params: { movieId },

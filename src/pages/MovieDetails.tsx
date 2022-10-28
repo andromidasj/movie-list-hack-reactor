@@ -19,7 +19,7 @@ function MovieDetails() {
   const { movieId } = useParams();
   const navigate = useNavigate();
   const { data, isLoading, isError, error } = useQuery(
-    [QUERY_KEYS.MOVIE, movieId],
+    [QUERY_KEYS.MOVIE, +movieId!],
     () => API.getMovieInfo(+movieId!)
   );
 
