@@ -12,7 +12,7 @@ interface ListItemArray {
   data: ListItems[];
 }
 
-console.log('test push to main');
+console.log('test push to dev');
 
 function useAddMovieToList({ movieId, targetListId }: MovieListInputs) {
   const queryClient = useQueryClient();
