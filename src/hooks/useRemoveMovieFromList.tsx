@@ -25,13 +25,6 @@ function useRemoveMovieFromList({ movieId, targetListId }: MovieListInputs) {
           QUERY_KEYS.LIST_ITEMS,
           targetListId,
         ]);
-        console.log('🚀 ~ onMutate: ~ previousTargetList', previousTargetList);
-
-        console.log(
-          previousTargetList?.data.filter(
-            (listItem) => listItem.movie.ids.tmdb !== +movieId
-          )
-        );
 
         if (previousTargetList) {
           queryClient.setQueryData<ListItemArray>(
