@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import urlJoin from 'url-join';
 import { LocalStorage } from '../enums/LocalStorageKeys';
-import { API, TRAKT_BASE_URL } from '../util/api';
+import { API } from '../util/api';
 import getTraktHeaders from '../util/getTraktHeaders';
 
 const TRAKT_API_KEY = import.meta.env.VITE_TRAKT_API_KEY;

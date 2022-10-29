@@ -20,8 +20,10 @@ import './NewList.scss';
 function NewList() {
   const [name, setName] = useInputState('');
   const [description, setDescription] = useInputState('');
-  const [privacy, togglePrivacy] = useToggle(['public', 'private'] as const);
+  const [isPublic, togglePublic] = useToggle([true, false] as const);
   const [errorAlert, setErrorAlert] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const mutation = useMutation(API.newList, {
     onSuccess: (data) => {
@@ -29,19 +31,17 @@ function NewList() {
     },
   });
 
-  const navigate = useNavigate();
-
   const handleSubmit = () => {
     const watchedName = '__' + name;
     const watchlist = {
       name,
       description,
-      privacy,
+      isPublic,
     };
     const watched = {
       name: watchedName,
       description: `Accompanying watched list for "${name}".\n`,
-      privacy,
+      isPublic,
     };
 
     [watchlist, watched].forEach((list) => {
@@ -101,10 +101,10 @@ function NewList() {
           onChange={setDescription}
         />
         <Switch
-          checked={privacy === 'private'}
+          checked={isPublic}
           label="Private list"
           size="xl"
-          onChange={() => togglePrivacy()}
+          onChange={() => togglePublic()}
           color="green"
           onLabel={<Lock />}
           offLabel={<Unlock />}

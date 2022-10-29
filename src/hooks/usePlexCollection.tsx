@@ -1,6 +1,7 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
 import axios, { AxiosPromise } from 'axios';
 import urlJoin from 'url-join';
+import { QUERY_KEYS } from '../enums/QueryKeys';
 
 interface LibraryResult {
   MediaContainer: {
@@ -18,6 +19,9 @@ const axiosConfig = {
 };
 
 const PLEX_URL = import.meta.env.VITE_PLEX_URL;
+const MOVIE_TYPE = 'movie';
+const LIBRARY_SECTIONS = 'library/sections';
+const GET_LIBRARIES_PATH = urlJoin(PLEX_URL, LIBRARY_SECTIONS);
 
 /**
  *
@@ -29,24 +33,21 @@ export default function usePlexCollection(
   title: string,
   year: string
 ): boolean {
-  // get all movies libraries from plex
-  const { data } = useQuery(['plex-libraries'], () =>
-    axios.get<LibraryResult>(urlJoin(PLEX_URL, 'library/sections'), axiosConfig)
+  // Get all movie libraries from plex
+  const { data } = useQuery([QUERY_KEYS.PLEX_ALL_LIBRARIES], () =>
+    axios.get<LibraryResult>(GET_LIBRARIES_PATH, axiosConfig)
   );
 
   const movieLibraries =
     data?.data.MediaContainer.Directory.filter(
-      (library) => library.type === 'movie'
+      (library) => library.type === MOVIE_TYPE
     ) || [];
 
   const results = useQueries<LibraryResult[]>({
     queries: movieLibraries.map((lib) => ({
-      queryKey: ['plex-library', lib.key],
+      queryKey: [QUERY_KEYS.PLEX_LIBRARY, lib.key],
       queryFn: (): AxiosPromise<LibraryResult> =>
-        axios.get(
-          urlJoin(PLEX_URL, 'library/sections', lib.key, 'all'),
-          axiosConfig
-        ),
+        axios.get(urlJoin(GET_LIBRARIES_PATH, lib.key, 'all'), axiosConfig),
       staleTime: Infinity,
     })),
   });

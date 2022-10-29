@@ -1,30 +1,19 @@
 import axios, { AxiosError, AxiosPromise } from 'axios';
 import applyCaseMiddleware from 'axios-case-converter';
 import urlJoin from 'url-join';
-import { LocalStorage } from '../enums/LocalStorageKeys';
 import { AllLists } from '../models/tmdb/AllLists';
 import { EditListResponse } from '../models/tmdb/EditListResponse';
 import { ListContents } from '../models/tmdb/ListContents';
+import { NewListInput } from '../models/tmdb/NewListInput';
 import { SearchResponse } from '../models/tmdb/SearchResponse';
 import { TmdbMovie } from '../models/tmdb/TmdbMovie';
 import { WatchProviderResponse } from '../models/tmdb/WatchProviderResponse';
 import { ItemPresent } from '../models/trakt/ListItems';
-import { MovieCollection } from '../models/trakt/MovieCollection';
-import { NewListInput } from '../models/trakt/NewListInput';
-import getTraktHeaders from './getTraktHeaders';
 
 interface ListMovieInput {
   movieId: string;
   targetListId: string;
 }
-
-const ACCOUNT_ID = JSON.parse(
-  localStorage.getItem(LocalStorage.TRAKT_USER_ID) || '""'
-);
-
-const TRAKT_ACCESS_TOKEN = JSON.parse(
-  localStorage.getItem(LocalStorage.TRAKT_ACCESS_TOKEN) || '""'
-);
 
 // TMDB
 const TMDB_BASE_URL = 'https://api.themoviedb.org';
@@ -32,6 +21,7 @@ const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const TMDB_ACCOUNT_ID = import.meta.env.VITE_TMDB_ACCOUNT_ID;
 const LANG = 'en-US';
 const V3 = '3';
+const V4 = '4';
 const WATCH_REGION = 'US';
 const MOVIE = 'movie';
 const TMDB_PARAMS = {
@@ -56,30 +46,17 @@ const TMDB = applyCaseMiddleware(
   })
 );
 
-// TRAKT
-export const TRAKT_BASE_URL = 'https://api.trakt.tv';
-const USERS = 'users';
-const LISTS = 'lists';
-const LIST_PATH = urlJoin(USERS, ACCOUNT_ID, LISTS);
-
-export const TRAKT = applyCaseMiddleware(
-  axios.create({
-    baseURL: TRAKT_BASE_URL,
-    headers: getTraktHeaders(),
-  })
-);
-
 export const API = {
   newList: ({
     name,
     description = '',
-    privacy,
+    isPublic,
   }: NewListInput): AxiosPromise<AllLists> =>
-    TRAKT.post(LIST_PATH, {
+    TMDB.post(urlJoin(V3, 'list'), {
       name,
       description,
-      privacy,
-      sort_by: 'added',
+      public: isPublic,
+      iso_639_1: 'en',
     }),
 
   getLists: (): AxiosPromise<AllLists> =>
@@ -94,9 +71,6 @@ export const API = {
 
   getListItems: (listId: string): AxiosPromise<ListContents> =>
     TMDB.get(urlJoin(V3, 'list', listId)),
-
-  getCollection: (): AxiosPromise<MovieCollection[]> =>
-    TRAKT.get('sync/collection/movies'),
 
   getMovieInfo: (movieId: number): AxiosPromise<TmdbMovie> =>
     TMDB.get(urlJoin(V3, MOVIE, String(movieId)), { params: TMDB_PARAMS }),
@@ -139,10 +113,9 @@ export const API = {
     }),
 
   deleteLists: (listId: number): AxiosPromise =>
-    TRAKT.delete(urlJoin(LIST_PATH, String(listId))),
+    TMDB.delete(urlJoin(V3, 'list', String(listId))),
 
   getAccount: (): AxiosPromise => TMDB.get(urlJoin(V3, 'account')),
-  // TRAKT.get(urlJoin(USERS, 'settings')),
 
   getWatchProviders: (): AxiosPromise<WatchProviderResponse> =>
     TMDB.get(urlJoin(V3, 'watch/providers', MOVIE), {

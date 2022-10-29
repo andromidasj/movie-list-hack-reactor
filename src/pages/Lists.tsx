@@ -44,7 +44,6 @@ function Lists() {
 
   if (isError) navigate('/login');
 
-  console.log('🚀 ~ Lists ~ data', data);
   const lists = data!.data.results;
   const listInfoArray: ListInfoTuple[] = [];
 
