@@ -4,7 +4,11 @@ import urlJoin from 'url-join';
 
 interface LibraryResult {
   MediaContainer: {
-    Directory: object[];
+    Directory: {
+      key: string;
+      type: string;
+      title: string;
+    }[];
   };
 }
 
@@ -15,22 +19,28 @@ const axiosConfig = {
 
 const PLEX_URL = import.meta.env.VITE_PLEX_URL;
 
+/**
+ *
+ * @param title The movie title.
+ * @param year The 4-digit release year.
+ * @returns boolean - Whether or not the movie is in the Plex collection.
+ */
 export default function usePlexCollection(
   title: string,
   year: string
 ): boolean {
   // get all movies libraries from plex
-  const { data } = useQuery<any>(['plex-libraries'], () =>
-    axios.get(urlJoin(PLEX_URL, 'library/sections'), axiosConfig)
+  const { data } = useQuery(['plex-libraries'], () =>
+    axios.get<LibraryResult>(urlJoin(PLEX_URL, 'library/sections'), axiosConfig)
   );
 
   const movieLibraries =
     data?.data.MediaContainer.Directory.filter(
-      (library: any) => library.type === 'movie'
+      (library) => library.type === 'movie'
     ) || [];
 
   const results = useQueries<LibraryResult[]>({
-    queries: movieLibraries.map((lib: any) => ({
+    queries: movieLibraries.map((lib) => ({
       queryKey: ['plex-library', lib.key],
       queryFn: (): AxiosPromise<LibraryResult> =>
         axios.get(
@@ -46,9 +56,7 @@ export default function usePlexCollection(
     const result: any = results[i];
     for (let j = 0; j < result.data?.data.MediaContainer.Metadata.length; j++) {
       const movie = result.data?.data.MediaContainer.Metadata[j];
-      if (movie.title === title && movie.year == year) {
-        return true;
-      }
+      if (movie.title === title && movie.year == year) return true;
     }
   }
 
