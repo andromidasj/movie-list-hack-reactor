@@ -1,25 +1,15 @@
-import {
-  Container,
-  Group,
-  Image,
-  Loader,
-  Space,
-  Stack,
-  Text,
-} from '@mantine/core';
-import { useQuery } from '@tanstack/react-query';
+import { Container, Group, Image, Space, Stack, Text } from '@mantine/core';
 import uuid from 'react-uuid';
-import { QUERY_KEYS } from '../../enums/QueryKeys';
+import usePlexCollection from '../../hooks/usePlexCollection';
 import { Flatrate } from '../../models/tmdb/TmdbMovie';
-import { MovieCollection } from '../../models/trakt/MovieCollection';
 import useStore from '../../store';
-import { API } from '../../util/api';
 import CollectionBar from './CollectionBar';
 import './WatchProviders.scss';
 
 interface WatchProvidersProps {
   providers?: Flatrate[];
   title: string;
+  year: string;
 }
 
 export const containerStyle = {
@@ -32,21 +22,12 @@ export const containerStyle = {
 
 const URL = 'https://image.tmdb.org/t/p/original';
 
-function WatchProviders({ providers, title }: WatchProvidersProps) {
+function WatchProviders({ providers, title, year }: WatchProvidersProps) {
   const myProviders = useStore((state) => state.providers)
     .filter((e) => e.active)
     .map((e) => e.name);
 
-  const { data, isError, isLoading } = useQuery(
-    [QUERY_KEYS.COLLECTION],
-    API.getCollection
-  );
-
-  if (isLoading || isError) return <Loader />;
-
-  const collected = data.data.find(
-    (collected: MovieCollection) => collected.movie.title === title
-  );
+  const inPlex = usePlexCollection(title, year);
 
   const filteredProviders =
     providers?.filter((provider: Flatrate) =>
@@ -72,15 +53,15 @@ function WatchProviders({ providers, title }: WatchProvidersProps) {
       </Container>
     )) || [];
 
-  if (collected) {
-    providersArr.push(<CollectionBar />);
+  if (inPlex) {
+    providersArr.push(<CollectionBar key={uuid()} />);
   }
 
   return (
     <Stack>
       <h2>Available on</h2>
       <Stack>
-        {providersArr.length ? (
+        {providersArr?.length ? (
           providersArr
         ) : (
           <Text>Not Available On Your Services</Text>

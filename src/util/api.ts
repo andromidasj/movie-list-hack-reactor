@@ -74,15 +74,13 @@ export const API = {
     name,
     description = '',
     privacy,
-  }: NewListInput): AxiosPromise<AllLists> => {
-    const body = {
+  }: NewListInput): AxiosPromise<AllLists> =>
+    TRAKT.post(LIST_PATH, {
       name,
       description,
       privacy,
       sort_by: 'added',
-    };
-    return TRAKT.post(LIST_PATH, body);
-  },
+    }),
 
   getLists: (): AxiosPromise<AllLists> =>
     TMDB.get(urlJoin(V3, 'account', TMDB_ACCOUNT_ID, 'lists')),

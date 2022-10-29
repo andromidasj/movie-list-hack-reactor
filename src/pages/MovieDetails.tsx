@@ -98,6 +98,7 @@ function MovieDetails() {
         <WatchProviders
           providers={movie.watchProviders.results.us?.flatrate}
           title={movie.title}
+          year={movie.releaseDate.substring(0, 4)}
         />
       </div>
     </>
