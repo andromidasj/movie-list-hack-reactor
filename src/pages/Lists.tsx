@@ -7,7 +7,7 @@ import {
   Stack,
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import { GearWideConnected, PlusLg } from 'react-bootstrap-icons';
+import { Bookmark, GearWideConnected, PlusLg } from 'react-bootstrap-icons';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import { QUERY_KEYS } from '../enums/QueryKeys';
 import useStore from '../store';
@@ -85,9 +85,20 @@ function Lists() {
           variant="gradient"
           gradient={gradients[i % gradients.length]}
         >
-          <Badge color="dark" className="list-badge">
+          <Badge
+            color="dark"
+            className="badge list-badge"
+            leftSection={<Bookmark />}
+          >
             {listInfoItem[3]}
           </Badge>
+          {/* <Badge
+            color="dark"
+            className="badge watched-badge"
+            leftSection={<Bookmark />}
+          >
+            {listInfoItem[3]}
+          </Badge> */}
           {listInfoItem[2]}
         </Button>
       );
