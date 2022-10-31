@@ -27,7 +27,7 @@ const GET_LIBRARIES_PATH = urlJoin(PLEX_URL || '', LIBRARY_SECTIONS);
  *
  * @param title The movie title.
  * @param year The 4-digit release year.
- * @returns boolean - Whether or not the movie is in the Plex collection.
+ * @returns getPlexCollection -> boolean - Whether or not the movie is in the Plex collection.
  */
 export default function usePlexCollection(title: string, year: string) {
   function getPlexCollection() {
