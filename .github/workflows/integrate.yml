@@ -1,9 +1,12 @@
-name: Node Continuous Integration
+name: CI
 
 on:
   push:
-    branches: ['main']
+    branches: [main]
     tags: ['v*.*.*']
+
+env:
+  REPO: ${{ secrets.DOCKER_HUB_USERNAME }}/trakt-movie-list
 
 jobs:
   test_push:
