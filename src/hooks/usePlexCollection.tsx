@@ -21,7 +21,7 @@ const axiosConfig = {
 const PLEX_URL = import.meta.env.VITE_PLEX_URL;
 const MOVIE_TYPE = 'movie';
 const LIBRARY_SECTIONS = 'library/sections';
-const GET_LIBRARIES_PATH = urlJoin(PLEX_URL, LIBRARY_SECTIONS);
+const GET_LIBRARIES_PATH = urlJoin(PLEX_URL || '', LIBRARY_SECTIONS);
 
 /**
  *
