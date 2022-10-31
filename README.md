@@ -35,7 +35,7 @@ Building this app has been a _huge_ learning experience for me! It is created us
 - Search movies
 - Extensive movie details — overview, trailer, actors, watch providers, & more!
 - Settings — select which streaming providers you’d like to see
-- Plex - optionally add a Plex URL and access token to add the personal collection to the available providers
+- Plex — optionally add a Plex URL and access token to add the personal collection to the available providers
 
 ## 💻 How to use
 
