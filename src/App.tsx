@@ -1,10 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { Route, Routes } from 'react-router-dom';
-
 import './App.scss';
 import Lists from './pages/Lists';
 import ListStats from './pages/ListStats';
-import Login from './pages/Login';
 import MovieDetails from './pages/MovieDetails';
 import NewList from './pages/NewList';
 import SelectedList from './pages/SelectedList';
@@ -22,7 +20,6 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<Lists />} />
-        <Route path="login" element={<Login />} />
         <Route path="settings" element={<Settings />} />
         <Route path="list" element={<SelectedList />} />
         <Route path="list/stats" element={<ListStats />} />

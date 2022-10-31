@@ -3,12 +3,12 @@ import applyCaseMiddleware from 'axios-case-converter';
 import urlJoin from 'url-join';
 import { AllLists } from '../models/tmdb/AllLists';
 import { EditListResponse } from '../models/tmdb/EditListResponse';
+import { ItemPresent } from '../models/tmdb/ItemPresent';
 import { ListContents } from '../models/tmdb/ListContents';
 import { NewListInput } from '../models/tmdb/NewListInput';
 import { SearchResponse } from '../models/tmdb/SearchResponse';
 import { TmdbMovie } from '../models/tmdb/TmdbMovie';
 import { WatchProviderResponse } from '../models/tmdb/WatchProviderResponse';
-import { ItemPresent } from '../models/trakt/ListItems';
 import { CSVEntry } from '../pages/ListStats';
 
 interface ListMovieInput {
