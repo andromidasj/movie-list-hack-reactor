@@ -9,25 +9,21 @@ jobs:
   test_push:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Login to Docker Hub
+      - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      -
-        name: Build and push (${{ github.ref_name }})
+      - name: Build and push (${{ github.ref_name }})
         uses: docker/build-push-action@v3
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/trakt-movie-list:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/trakt-movie-list:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/trakt-movie-list:buildcache,mode=max
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/movie-list:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/movie-list:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/movie-list:buildcache,mode=max
