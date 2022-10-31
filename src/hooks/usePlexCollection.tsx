@@ -15,10 +15,13 @@ interface LibraryResult {
 
 const axiosConfig = {
   headers: { accept: 'application/json' },
-  params: { 'X-Plex-Token': import.meta.env.VITE_PLEX_ACCESS_TOKEN },
+  params: {
+    'X-Plex-Token':
+      import.meta.env.VITE_PLEX_ACCESS_TOKEN || process?.env.PLEX_ACCESS_TOKEN,
+  },
 };
 
-const PLEX_URL = import.meta.env.VITE_PLEX_URL;
+const PLEX_URL = import.meta.env.VITE_PLEX_URL || process?.env.PLEX_URL;
 const MOVIE_TYPE = 'movie';
 const LIBRARY_SECTIONS = 'library/sections';
 const GET_LIBRARIES_PATH = urlJoin(PLEX_URL || '', LIBRARY_SECTIONS);
