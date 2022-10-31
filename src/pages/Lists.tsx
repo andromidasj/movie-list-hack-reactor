@@ -32,7 +32,8 @@ function Lists() {
   const navigate = useNavigate();
   const setTab = useStore((state) => state.setTab);
   const setSearchQuery = useStore((state) => state.setSearchQuery);
-  setTab('toWatch');
+  // setTab('toWatch');
+  // Causes error: Warning: Cannot update a component (`Tabs`) while rendering a different component (`Lists`).
   setSearchQuery('');
 
   const { data, isLoading, isError } = useQuery(
