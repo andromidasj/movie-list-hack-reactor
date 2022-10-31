@@ -18,10 +18,8 @@ interface ListMovieInput {
 
 // TMDB
 const TMDB_BASE_URL = 'https://api.themoviedb.org';
-const TMDB_API_KEY =
-  import.meta.env.VITE_TMDB_API_KEY || process?.env.TMDB_API_KEY || '';
-const TMDB_ACCOUNT_ID =
-  import.meta.env.VITE_TMDB_ACCOUNT_ID || process?.env.TMDB_ACCOUNT_ID || '';
+const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const TMDB_ACCOUNT_ID = import.meta.env.VITE_TMDB_ACCOUNT_ID;
 const LANG = 'en-US';
 const V3 = '3';
 const V4 = '4';
@@ -44,9 +42,7 @@ const TMDB = applyCaseMiddleware(
   axios.create({
     baseURL: TMDB_BASE_URL,
     headers: {
-      Authorization: `Bearer ${
-        import.meta.env.VITE_TMDB_ACCESS_TOKEN || process?.env.TMDB_ACCESS_TOKEN
-      }`,
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
     },
   })
 );
