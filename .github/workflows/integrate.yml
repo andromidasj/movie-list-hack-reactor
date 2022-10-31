@@ -9,7 +9,7 @@ env:
   REPO: ${{ secrets.DOCKER_HUB_USERNAME }}/trakt-movie-list
 
 jobs:
-  test_push:
+  build-push-to-docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
