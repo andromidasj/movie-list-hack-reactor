@@ -11,14 +11,15 @@ import { API } from '../util/api';
 import parseMovieDetails from '../util/parseMovieDetails';
 import './MovieDetails.scss';
 
-const BACKDROP_URL = 'https://image.tmdb.org/t/p/w780';
-const ACTOR_IMAGE_URL = 'https://image.tmdb.org/t/p/w342';
+const BASE_URL = 'https://image.tmdb.org/t/p/';
+const BACKDROP_URL = BASE_URL + 'w780';
+const ACTOR_IMAGE_URL = BASE_URL + 'w342';
 
 function MovieDetails() {
   const { movieId } = useParams();
   const navigate = useNavigate();
   const { data, isLoading, isError, error } = useQuery(
-    [QUERY_KEYS.MOVIE, movieId],
+    [QUERY_KEYS.MOVIE, +movieId!],
     () => API.getMovieInfo(+movieId!)
   );
 
@@ -71,7 +72,7 @@ function MovieDetails() {
         >
           <p>{movie.overview}</p>
         </Spoiler>
-        <ListActions />
+        <ListActions movieId={movieId!} />
         {video && (
           <iframe src={trailerLink} title="movie trailer" className="trailer" />
         )}
@@ -97,6 +98,7 @@ function MovieDetails() {
         <WatchProviders
           providers={movie.watchProviders.results.us?.flatrate}
           title={movie.title}
+          year={movie.releaseDate.substring(0, 4)}
         />
       </div>
     </>

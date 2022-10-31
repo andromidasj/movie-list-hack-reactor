@@ -7,7 +7,7 @@ import {
   Stack,
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import { GearWideConnected, PlusLg } from 'react-bootstrap-icons';
+import { Bookmark, GearWideConnected, PlusLg } from 'react-bootstrap-icons';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import { QUERY_KEYS } from '../enums/QueryKeys';
 import useStore from '../store';
@@ -23,8 +23,8 @@ type ListInfoTuple = [
 
 const gradients = [
   { from: 'indigo', to: 'cyan' },
-  { from: 'teal', to: 'blue' },
   { from: 'orange', to: 'green' },
+  { from: 'teal', to: 'blue' },
   { from: '#6d9a31', to: '#2f6a9e' },
 ];
 
@@ -32,7 +32,8 @@ function Lists() {
   const navigate = useNavigate();
   const setTab = useStore((state) => state.setTab);
   const setSearchQuery = useStore((state) => state.setSearchQuery);
-  setTab('toWatch');
+  // setTab('toWatch');
+  // Causes error: Warning: Cannot update a component (`Tabs`) while rendering a different component (`Lists`).
   setSearchQuery('');
 
   const { data, isLoading, isError } = useQuery(
@@ -44,7 +45,7 @@ function Lists() {
 
   if (isError) navigate('/login');
 
-  const lists = data!.data;
+  const lists = data!.data.results;
   const listInfoArray: ListInfoTuple[] = [];
 
   const watched = lists.filter((list) => list.name.startsWith('__'));
@@ -52,18 +53,12 @@ function Lists() {
 
   watchList.forEach((list) => {
     const w = watched.find((watched) => watched.name === `__${list.name}`);
-    if (w) {
-      listInfoArray.push([
-        list.ids.trakt!,
-        w.ids.trakt!,
-        list.name,
-        list.itemCount,
-      ]);
-    }
+    if (w) listInfoArray.push([list.id!, w.id!, list.name, list.itemCount]);
   });
 
-  const allLists = listInfoArray.map(
-    (listInfoItem: ListInfoTuple, i: number) => {
+  const allLists = listInfoArray
+    .sort((a, b) => a[2].localeCompare(b[2]))
+    .map((listInfoItem: ListInfoTuple, i: number) => {
       const params = {
         list: listInfoItem[0].toString(),
         watched: listInfoItem[1].toString(),
@@ -90,14 +85,24 @@ function Lists() {
           variant="gradient"
           gradient={gradients[i % gradients.length]}
         >
-          <Badge color="dark" className="list-badge">
+          <Badge
+            color="dark"
+            className="badge list-badge"
+            leftSection={<Bookmark />}
+          >
             {listInfoItem[3]}
           </Badge>
+          {/* <Badge
+            color="dark"
+            className="badge watched-badge"
+            leftSection={<Bookmark />}
+          >
+            {listInfoItem[3]}
+          </Badge> */}
           {listInfoItem[2]}
         </Button>
       );
-    }
-  );
+    });
 
   return (
     <>

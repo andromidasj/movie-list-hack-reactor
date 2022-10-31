@@ -1,40 +1,28 @@
-import axios, { AxiosPromise } from 'axios';
+import axios, { AxiosError, AxiosPromise } from 'axios';
 import applyCaseMiddleware from 'axios-case-converter';
 import urlJoin from 'url-join';
-import { LocalStorage } from '../enums/LocalStorageKeys';
+import { AllLists } from '../models/tmdb/AllLists';
+import { EditListResponse } from '../models/tmdb/EditListResponse';
+import { ItemPresent } from '../models/tmdb/ItemPresent';
+import { ListContents } from '../models/tmdb/ListContents';
+import { NewListInput } from '../models/tmdb/NewListInput';
 import { SearchResponse } from '../models/tmdb/SearchResponse';
 import { TmdbMovie } from '../models/tmdb/TmdbMovie';
 import { WatchProviderResponse } from '../models/tmdb/WatchProviderResponse';
-import { AddListItemsResponse } from '../models/trakt/AddListItemsResponse';
-import { ListItems } from '../models/trakt/ListItems';
-import { ListResult } from '../models/trakt/ListResult';
-import { MovieCollection } from '../models/trakt/MovieCollection';
-import { NewListInput } from '../models/trakt/NewListInput';
-import { RemoveListItemsResponse } from '../models/trakt/RemoveListItemsResponse';
-import { UserSettings } from '../models/trakt/User';
-import getTraktHeaders from './getTraktHeaders';
+import { CSVEntry } from '../pages/ListStats';
 
 interface ListMovieInput {
-  movieId: number;
-  listId: number;
+  movieId: string;
+  targetListId: string;
 }
 
-const ACCOUNT_ID = JSON.parse(
-  localStorage.getItem(LocalStorage.USER_ID) || '""'
-);
-
-const ACCESS_TOKEN = JSON.parse(
-  localStorage.getItem(LocalStorage.ACCESS_TOKEN) || '""'
-);
-
 // TMDB
-const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const TMDB_BASE_URL = 'https://api.themoviedb.org';
-
-const TMDB = applyCaseMiddleware(axios.create({ baseURL: TMDB_BASE_URL }));
-
+const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const TMDB_ACCOUNT_ID = import.meta.env.VITE_TMDB_ACCOUNT_ID;
 const LANG = 'en-US';
-const TMDB_API_VERSION = '3';
+const V3 = '3';
+const V4 = '4';
 const WATCH_REGION = 'US';
 const MOVIE = 'movie';
 const TMDB_PARAMS = {
@@ -50,17 +38,12 @@ const TMDB_PARAMS = {
   ].join(','),
 };
 
-// TRAKT
-export const TRAKT_BASE_URL = 'https://api.trakt.tv';
-const USERS = 'users';
-const LISTS = 'lists';
-const ITEMS = 'items';
-const LIST_PATH = urlJoin(USERS, ACCOUNT_ID, LISTS);
-
-export const TRAKT = applyCaseMiddleware(
+const TMDB = applyCaseMiddleware(
   axios.create({
-    baseURL: TRAKT_BASE_URL,
-    headers: getTraktHeaders(ACCESS_TOKEN),
+    baseURL: TMDB_BASE_URL,
+    headers: {
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
+    },
   })
 );
 
@@ -68,51 +51,73 @@ export const API = {
   newList: ({
     name,
     description = '',
-    privacy,
-  }: NewListInput): AxiosPromise<ListResult> => {
-    const body = {
+    isPublic,
+  }: NewListInput): AxiosPromise<AllLists> =>
+    TMDB.post(urlJoin(V3, 'list'), {
       name,
       description,
-      privacy,
-      sort_by: 'added',
-    };
-    return TRAKT.post(LIST_PATH, body);
-  },
+      public: isPublic,
+      iso_639_1: 'en',
+    }),
 
-  getLists: (): AxiosPromise<ListResult[]> => TRAKT.get(LIST_PATH),
+  getLists: (): AxiosPromise<AllLists> =>
+    TMDB.get(urlJoin(V3, 'account', TMDB_ACCOUNT_ID, 'lists')),
 
-  getListInfo: (listId: number): AxiosPromise<ListResult> =>
-    TRAKT.get(urlJoin(LIST_PATH, String(listId))),
+  checkIsInList: (listId: string, movieId: string): AxiosPromise<ItemPresent> =>
+    TMDB.get(urlJoin(V3, 'list', listId, 'item_status'), {
+      params: { movieId },
+    }),
+  checkListRetryUnlessNotFound: (_failureCount: number, error: AxiosError) =>
+    error.response?.status !== 404,
 
-  getListItems: (listId: number): AxiosPromise<ListItems[]> =>
-    TRAKT.get(urlJoin(LIST_PATH, String(listId), ITEMS)),
-
-  getCollection: (): AxiosPromise<MovieCollection[]> =>
-    TRAKT.get('sync/collection/movies'),
+  getListItems: (listId: string): AxiosPromise<ListContents> =>
+    TMDB.get(urlJoin(V3, 'list', listId)),
 
   getMovieInfo: (movieId: number): AxiosPromise<TmdbMovie> =>
-    TMDB.get(urlJoin(TMDB_API_VERSION, MOVIE, String(movieId)), {
-      params: TMDB_PARAMS,
-    }),
+    TMDB.get(urlJoin(V3, MOVIE, String(movieId)), { params: TMDB_PARAMS }),
 
   addMovieToList: ({
     movieId,
+    targetListId,
+  }: ListMovieInput): AxiosPromise<EditListResponse> =>
+    TMDB.post(urlJoin(V3, 'list', targetListId, 'add_item'), {
+      mediaId: +movieId,
+    }),
+
+  addMoviesToListV4: ({
     listId,
-  }: ListMovieInput): AxiosPromise<AddListItemsResponse> =>
-    TRAKT.post(urlJoin(LIST_PATH, String(listId), ITEMS), {
-      movies: [{ ids: { tmdb: movieId } }],
+    items,
+  }: {
+    listId: string;
+    items: CSVEntry[];
+  }): AxiosPromise<any> =>
+    TMDB.post(urlJoin(V4, 'list', listId, 'items'), {
+      items: items.map((row) => ({
+        mediaType: 'movie',
+        mediaId: row.tmdbId,
+      })),
     }),
 
   removeMovieFromList: ({
     movieId,
-    listId,
-  }: ListMovieInput): AxiosPromise<RemoveListItemsResponse> =>
-    TRAKT.post(urlJoin(LIST_PATH, String(listId), ITEMS, 'remove'), {
-      movies: [{ ids: { tmdb: movieId } }],
+    targetListId,
+  }: ListMovieInput): AxiosPromise<EditListResponse> =>
+    TMDB.post(urlJoin(V3, 'list', targetListId, 'remove_item'), {
+      mediaId: +movieId,
     }),
+  // V4
+  // removeMovieFromList: ({
+  //   movieId,
+  //   targetListId,
+  // }: ListMovieInput): AxiosPromise<EditListResponse> =>
+  //   TMDB.delete(urlJoin(V3, 'list', targetListId, 'add_item'), {
+  //     data: {
+  //       items: [{ mediaId: +movieId }],
+  //     },
+  //   }),
 
   search: (query: string): AxiosPromise<SearchResponse> =>
-    TMDB.get(urlJoin(TMDB_API_VERSION, 'search', MOVIE), {
+    TMDB.get(urlJoin(V3, 'search', MOVIE), {
       params: {
         query,
         api_key: TMDB_API_KEY,
@@ -123,13 +128,12 @@ export const API = {
     }),
 
   deleteLists: (listId: number): AxiosPromise =>
-    TRAKT.delete(urlJoin(LIST_PATH, String(listId))),
+    TMDB.delete(urlJoin(V3, 'list', String(listId))),
 
-  getStats: (): AxiosPromise<UserSettings> =>
-    TRAKT.get(urlJoin(USERS, 'settings')),
+  getAccount: (): AxiosPromise => TMDB.get(urlJoin(V3, 'account')),
 
   getWatchProviders: (): AxiosPromise<WatchProviderResponse> =>
-    TMDB.get(urlJoin(TMDB_API_VERSION, 'watch/providers', MOVIE), {
+    TMDB.get(urlJoin(V3, 'watch/providers', MOVIE), {
       params: {
         api_key: TMDB_API_KEY,
         language: LANG,

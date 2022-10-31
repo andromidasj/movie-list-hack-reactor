@@ -1,4 +1,4 @@
-# 🎬 Trakt Movie List 📱
+# Movie List 📱
 
 _(Catchy name pending...)_
 
@@ -21,27 +21,25 @@ During my time at [Hack Reactor](https://www.hackreactor.com/), we had the chanc
 Building this app has been a _huge_ learning experience for me! It is created using awesome tools like:
 
 - React
-- Express
 - React Router
 - React Query
 - SASS
 - [Mantine UI](https://mantine.dev/)
-- [Trakt API](https://trakt.docs.apiary.io/)
 - [TMDB API](https://developers.themoviedb.org/3)
 - [Zustand](https://github.com/pmndrs/zustand)
 
 ## 🔥 Features
 
-- Sign in with Trakt
-- Create, remove, and edit lists stored in your Trakt account
+- Create, remove, and edit lists stored in your TMDB account
 - Mark movies as _Watched_ or _To Watch_
 - Search movies
 - Extensive movie details — overview, trailer, actors, watch providers, & more!
 - Settings — select which streaming providers you’d like to see
+- Plex - optionally add a Plex URL and access token to add the personal collection to the available providers
 
 ## 💻 How to use
 
-This project has been dockerized — you can find the image and installation instructions at [joshandromidas/trakt-movie-list](https://hub.docker.com/r/joshandromidas/trakt-movie-list) to deploy it yourself!
+This project has been dockerized — you can find the image and installation instructions at [joshandromidas/movie-list](https://hub.docker.com/r/joshandromidas/movie-list) to deploy it yourself!
 
 ## 🗺️ Roadmap
 
