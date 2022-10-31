@@ -9,6 +9,7 @@ import { SearchResponse } from '../models/tmdb/SearchResponse';
 import { TmdbMovie } from '../models/tmdb/TmdbMovie';
 import { WatchProviderResponse } from '../models/tmdb/WatchProviderResponse';
 import { ItemPresent } from '../models/trakt/ListItems';
+import { CSVEntry } from '../pages/ListStats';
 
 interface ListMovieInput {
   movieId: string;
@@ -81,6 +82,20 @@ export const API = {
   }: ListMovieInput): AxiosPromise<EditListResponse> =>
     TMDB.post(urlJoin(V3, 'list', targetListId, 'add_item'), {
       mediaId: +movieId,
+    }),
+
+  addMoviesToListV4: ({
+    listId,
+    items,
+  }: {
+    listId: string;
+    items: CSVEntry[];
+  }): AxiosPromise<any> =>
+    TMDB.post(urlJoin(V4, 'list', listId, 'items'), {
+      items: items.map((row) => ({
+        mediaType: 'movie',
+        mediaId: row.tmdbId,
+      })),
     }),
 
   removeMovieFromList: ({

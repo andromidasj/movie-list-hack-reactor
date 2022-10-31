@@ -9,11 +9,12 @@ import {
   Transition,
 } from '@mantine/core';
 import { useInputState, useToggle } from '@mantine/hooks';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ExclamationCircle, Lock, Unlock } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import TitleNav from '../components/TitleNav/TitleNav';
+import { QUERY_KEYS } from '../enums/QueryKeys';
 import { API } from '../util/api';
 import './NewList.scss';
 
@@ -25,6 +26,7 @@ function NewList() {
 
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();
   const mutation = useMutation(API.newList, {
     onSuccess: (data) => {
       console.log('Successfully created list', data);
@@ -48,6 +50,7 @@ function NewList() {
       mutation.mutate(list, {
         onSuccess: () => {
           navigate('/', { replace: true });
+          queryClient.invalidateQueries([QUERY_KEYS.ALL_LISTS]);
         },
         onError: (error) => {
           console.log('Error:', error);

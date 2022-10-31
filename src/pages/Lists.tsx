@@ -23,8 +23,8 @@ type ListInfoTuple = [
 
 const gradients = [
   { from: 'indigo', to: 'cyan' },
-  { from: 'teal', to: 'blue' },
   { from: 'orange', to: 'green' },
+  { from: 'teal', to: 'blue' },
   { from: '#6d9a31', to: '#2f6a9e' },
 ];
 
@@ -52,13 +52,12 @@ function Lists() {
 
   watchList.forEach((list) => {
     const w = watched.find((watched) => watched.name === `__${list.name}`);
-    if (w) {
-      listInfoArray.push([list.id!, w.id!, list.name, list.itemCount]);
-    }
+    if (w) listInfoArray.push([list.id!, w.id!, list.name, list.itemCount]);
   });
 
-  const allLists = listInfoArray.map(
-    (listInfoItem: ListInfoTuple, i: number) => {
+  const allLists = listInfoArray
+    .sort((a, b) => a[2].localeCompare(b[2]))
+    .map((listInfoItem: ListInfoTuple, i: number) => {
       const params = {
         list: listInfoItem[0].toString(),
         watched: listInfoItem[1].toString(),
@@ -102,8 +101,7 @@ function Lists() {
           {listInfoItem[2]}
         </Button>
       );
-    }
-  );
+    });
 
   return (
     <>

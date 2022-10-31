@@ -34,6 +34,7 @@
     "react-dom": "^18.2.0",
     "react-dom-confetti": "^0.2.0",
     "react-intersection-observer": "^9.4.0",
+    "react-papaparse": "^4.1.0",
     "react-router-dom": "^6.4.2",
     "react-uuid": "^1.0.2",
     "sass": "^1.49.11",
