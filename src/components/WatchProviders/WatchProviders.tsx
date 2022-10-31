@@ -27,7 +27,12 @@ function WatchProviders({ providers, title, year }: WatchProvidersProps) {
     .filter((e) => e.active)
     .map((e) => e.name);
 
-  const inPlex = usePlexCollection(title, year);
+  const { getPlexCollection } = usePlexCollection(title, year);
+
+  const inPlex =
+    import.meta.env.VITE_PLEX_URL && import.meta.env.VITE_PLEX_ACCESS_TOKEN
+      ? getPlexCollection()
+      : null;
 
   const filteredProviders =
     providers?.filter((provider: Flatrate) =>
