@@ -10,9 +10,8 @@ interface MovieCardProps {
   tmdbId: number;
   title: string;
   year: string;
-  // TODO: specify types
-  list: any;
-  watched: any;
+  list: string;
+  watched: string;
   listName: string;
 }
 
@@ -52,7 +51,7 @@ function MovieCard({
           alt={`${movie.title} movie poster`}
           withPlaceholder
           ref={ref}
-          src={urlJoin(POSTER_PATH, movie.posterPath)}
+          src={urlJoin(POSTER_PATH, movie.posterPath!)}
         />
         <Text
           color="white"

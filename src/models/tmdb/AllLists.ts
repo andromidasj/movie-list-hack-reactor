@@ -7,7 +7,7 @@ interface Result {
   iso6391: string;
   listType: string;
   name: string;
-  posterPath?: any;
+  posterPath?: string;
 }
 
 export interface AllLists {

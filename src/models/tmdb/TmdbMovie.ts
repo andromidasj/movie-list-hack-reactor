@@ -16,7 +16,7 @@ export interface TmdbMovie {
   originalTitle: string;
   overview: string | null;
   popularity: number;
-  posterPath: any | null;
+  posterPath: string | null;
   productionCompanies: ProductionCompany[];
   productionCountries: ProductionCountry[];
   releaseDate: string;
