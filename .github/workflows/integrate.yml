@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     branches: [main]
-    tags: ['v*.*.*']
 
 env:
   REPO: ${{ secrets.DOCKER_HUB_USERNAME }}/trakt-movie-list
@@ -30,3 +29,8 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/movie-list:latest
           cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/movie-list:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/movie-list:buildcache,mode=max
+      - name: Recreate portainer container
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: ${{ secrets.PORTAINER_WEBHOOK_URL }}
+          method: 'POST'
