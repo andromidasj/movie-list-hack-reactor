@@ -35,3 +35,4 @@ jobs:
         with:
           url: ${{ secrets.PORTAINER_WEBHOOK_URL }}
           method: 'POST'
+          preventFailureOnNoResponse: 'true'
