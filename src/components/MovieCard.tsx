@@ -10,16 +10,14 @@ interface MovieCardProps {
   tmdbId: number;
   title: string;
   year: string;
-  // TODO: specify types
-  list: any;
-  watched: any;
+  list: string;
+  watched: string;
   listName: string;
 }
 
 const MOVIE_PATH = '/movie';
 const POSTER_PATH = 'https://www.themoviedb.org/t/p/w342';
 const IMG_RATIO = 2 / 3;
-const CARD_HEIGHT = 170;
 
 function MovieCard({
   tmdbId,
@@ -48,17 +46,13 @@ function MovieCard({
 
     return (
       <Link to={{ pathname, search }} style={{ textDecoration: 'none' }}>
-        <AspectRatio ratio={IMG_RATIO} sx={{ height: CARD_HEIGHT }}>
-          <Image
-            height={CARD_HEIGHT}
-            fit="cover"
-            radius="md"
-            alt={`${movie.title} movie poster`}
-            withPlaceholder
-            ref={ref}
-            src={urlJoin(POSTER_PATH, movie.posterPath)}
-          />
-        </AspectRatio>
+        <Image
+          radius="md"
+          alt={`${movie.title} movie poster`}
+          withPlaceholder
+          ref={ref}
+          src={urlJoin(POSTER_PATH, movie.posterPath!)}
+        />
         <Text
           color="white"
           transform="uppercase"

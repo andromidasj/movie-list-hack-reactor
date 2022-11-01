@@ -13,7 +13,6 @@ import MovieCard from '../components/MovieCard';
 import { TmdbMovie } from '../models/tmdb/TmdbMovie';
 
 interface MoviesProps {
-  // TODO: specify types
   movies: TmdbMovie[];
   list: string;
   watched: string;
@@ -23,7 +22,6 @@ interface MoviesProps {
 function Movies({ movies, list, watched, listName }: MoviesProps) {
   if (!movies) return <h3>Loading...</h3>;
 
-  // TODO: specify type
   const movieCards = movies.map((movie) => (
     <MovieCard
       key={uuid()}

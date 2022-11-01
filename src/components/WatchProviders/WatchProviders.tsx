@@ -40,7 +40,7 @@ function WatchProviders({ providers, title, year }: WatchProvidersProps) {
     ) || [];
 
   const providersArr =
-    filteredProviders.map((provider: any) => (
+    filteredProviders.map((provider) => (
       <Container style={containerStyle} key={uuid()}>
         <Group noWrap position="apart" key={uuid()}>
           <Image

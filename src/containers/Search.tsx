@@ -42,8 +42,8 @@ function Search({ listName }: SearchProps) {
                 tmdbId={movie.id}
                 title={movie.title}
                 year={movie.releaseDate?.substring(0, 4)}
-                list={listId}
-                watched={watchedId}
+                list={listId!}
+                watched={watchedId!}
                 key={uuid()}
                 listName={listName}
               />
