@@ -12,6 +12,8 @@ RUN yarn install
 
 RUN yarn build
 
+EXPOSE 3000
+
 CMD ["yarn", "deploy"]
 
 # docker buildx build --platform linux/amd64,linux/arm64 --push -t joshandromidas/movie-list .
