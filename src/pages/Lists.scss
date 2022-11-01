@@ -23,7 +23,7 @@
 }
 
 .list:active {
-  transform: scale(.95);
+  transform: scale(0.95);
 }
 
 .lists-title-container {
@@ -35,8 +35,15 @@
   background-color: black;
 }
 
-.list-badge {
+.badge {
   position: absolute;
   top: 5px;
+}
+
+.list-badge {
   left: 5px;
+}
+
+.watched-badge {
+  right: 5px;
 }

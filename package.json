@@ -1,6 +1,6 @@
 {
-  "name": "trakt-movie-list",
-  "version": "0.2.1",
+  "name": "movie-list",
+  "version": "0.2.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
+    "@import-meta-env/cli": "^0.2.2",
+    "@import-meta-env/typescript": "^0.2.0",
+    "@import-meta-env/unplugin": "^0.2.1",
     "@mantine/core": "^5.5.5",
     "@mantine/hooks": "^5.5.5",
     "@tanstack/react-query": "^4.12.0",
@@ -27,22 +30,21 @@
     "@vitejs/plugin-react": "^2.1.0",
     "axios": "^0.27.2",
     "axios-case-converter": "^0.11.1",
+    "dotenv": "^16.0.3",
     "immer": "^9.0.12",
-    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-bootstrap-icons": "^1.8.1",
     "react-dom": "^18.2.0",
     "react-dom-confetti": "^0.2.0",
     "react-intersection-observer": "^9.4.0",
+    "react-papaparse": "^4.1.0",
     "react-router-dom": "^6.4.2",
     "react-uuid": "^1.0.2",
     "sass": "^1.49.11",
     "serve": "^14.0.1",
     "typescript": "^4.8.4",
     "url-join": "^5.0.0",
-    "use-debounce": "^8.0.0",
     "vite": "^3.1.8",
-    "web-vitals": "^2.1.0",
     "zustand": "^3.7.1"
   }
 }

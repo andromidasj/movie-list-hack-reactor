@@ -8,13 +8,16 @@ import {
   CheckCircleFill,
 } from 'react-bootstrap-icons';
 import Confetti from 'react-dom-confetti';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { QUERY_KEYS } from '../../enums/QueryKeys';
 import { SEARCH_PARAMS } from '../../enums/SearchParams';
-import useAddMovieToList from '../../hooks/useAddMovieToList';
-import useRemoveMovieFromList from '../../hooks/useRemoveMovieFromList';
+import useChangeListItems from '../../hooks/useChangeListItems';
 import { API } from '../../util/api';
 import './ListActions.scss';
+
+interface Props {
+  movieId: string;
+}
 
 const activeButtonRoot: CSSObject = {
   height: 60,
@@ -35,54 +38,53 @@ const disabledButtonStyle = (theme: MantineTheme) => ({
   },
 });
 
-function ListActions() {
-  const { movieId } = useParams();
+function ListActions({ movieId }: Props) {
   const [searchParams] = useSearchParams();
   const listId = searchParams.get(SEARCH_PARAMS.LIST);
   const watchedId = searchParams.get(SEARCH_PARAMS.WATCHED);
   const name = searchParams.get(SEARCH_PARAMS.NAME);
+
   const [confetti, setConfetti] = useState(false);
 
   // TODO: If no movieId, redirect
 
-  const getList = useQuery([QUERY_KEYS.LIST_ITEMS, listId], () =>
-    API.getListItems(+listId!)
-  );
-
-  const getWatched = useQuery([QUERY_KEYS.LIST_ITEMS, watchedId], () =>
-    API.getListItems(+watchedId!)
-  );
-
-  const movieAndList = {
-    movieId: movieId!,
+  const { mutate: addMovieToWatchlist } = useChangeListItems({
+    movieId,
     targetListId: listId!,
-  };
-  const movieAndWatched = {
-    movieId: movieId!,
+    insertion: true,
+  });
+  const { mutate: markMovieWatched } = useChangeListItems({
+    movieId,
     targetListId: watchedId!,
-  };
+    insertion: true,
+  });
+  const { mutate: removeMovieFromWatchlist } = useChangeListItems({
+    movieId,
+    targetListId: listId!,
+    insertion: false,
+  });
+  const { mutate: markMovieUnwatched } = useChangeListItems({
+    movieId,
+    targetListId: watchedId!,
+    insertion: false,
+  });
 
-  const { mutate: addMovieToWatchlist } = useAddMovieToList(movieAndList);
-  const { mutate: markMovieWatched } = useAddMovieToList(movieAndWatched);
-
-  const { mutate: removeMovieFromWatchlist } =
-    useRemoveMovieFromList(movieAndList);
-  const { mutate: markMovieUnwatched } =
-    useRemoveMovieFromList(movieAndWatched);
-
-  if (getList.isLoading || getWatched.isLoading) return null;
-
-  if (getList.isError || getWatched.isError) {
-    return <h1>{`Error ${getList.error || getWatched.error}`}</h1>;
-  }
-
-  const inList = getList.data!.data.find(
-    (movie) => movie.movie.ids.tmdb === Number(movieId)
+  const inListCheck = useQuery(
+    [QUERY_KEYS.IS_IN_LIST, movieId, listId],
+    () => API.checkIsInList(listId!, movieId!),
+    { retry: API.checkListRetryUnlessNotFound }
   );
 
-  const inWatched = getWatched.data!.data.find(
-    (movie) => movie.movie.ids.tmdb === Number(movieId)
+  const inWatchedCheck = useQuery(
+    [QUERY_KEYS.IS_IN_LIST, movieId, watchedId],
+    () => API.checkIsInList(watchedId!, movieId!),
+    { retry: API.checkListRetryUnlessNotFound }
   );
+
+  if (inListCheck.isLoading || inWatchedCheck.isLoading) return null;
+
+  const inList = !!inListCheck.data?.data.itemPresent;
+  const inWatched = !!inWatchedCheck.data?.data.itemPresent;
 
   const toggleConfetti = () => {
     setConfetti(true);

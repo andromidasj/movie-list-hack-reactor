@@ -9,7 +9,9 @@ const container = document.getElementById('root');
 const root = createRoot(container!);
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { refetchOnWindowFocus: false } },
+  defaultOptions: {
+    queries: { refetchOnWindowFocus: false, staleTime: 5 * 60 * 1000 },
+  },
 });
 
 root.render(

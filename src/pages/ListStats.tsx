@@ -10,15 +10,29 @@ import {
 } from '@mantine/core';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Download, Trash } from 'react-bootstrap-icons';
+import { Download, Trash, Upload } from 'react-bootstrap-icons';
+import { useCSVDownloader, useCSVReader } from 'react-papaparse';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import TitleNav from '../components/TitleNav/TitleNav';
 import { QUERY_KEYS } from '../enums/QueryKeys';
 import { SEARCH_PARAMS } from '../enums/SearchParams';
-import { ListItems } from '../models/trakt/ListItems';
+import { TmdbMovie } from '../models/tmdb/TmdbMovie';
 import { API } from '../util/api';
 import './ListStats.scss';
+
+export interface CSVEntry {
+  watched: boolean;
+  tmdbId: number;
+  title: string;
+  year: number;
+}
+
+interface CSVResults {
+  data: CSVEntry[];
+  errors: CSVEntry[];
+  meta: CSVEntry[];
+}
 
 function ListStats() {
   const [searchParams] = useSearchParams();
@@ -30,42 +44,25 @@ function ListStats() {
   const [modalOpened, setModalOpened] = useState(false);
   const deleteList = useMutation(API.deleteLists);
 
-  const list = useQuery([QUERY_KEYS.LIST_INFO, listId], () =>
-    API.getListInfo(+listId!)
+  const [uploadIsLoading, setUploadIsLoading] = useState(false);
+  const { CSVReader } = useCSVReader();
+  const { CSVDownloader } = useCSVDownloader();
+
+  const { data: list } = useQuery([QUERY_KEYS.LIST_ITEMS, listId], () =>
+    API.getListItems(listId!)
   );
-  const watched = useQuery([QUERY_KEYS.LIST_INFO, watchedId], () =>
-    API.getListInfo(+watchedId!)
+  const { data: watched } = useQuery([QUERY_KEYS.LIST_ITEMS, watchedId], () =>
+    API.getListItems(watchedId!)
   );
 
-  const { data: listItems } = useQuery([QUERY_KEYS.LIST_ITEMS, listId], () =>
-    API.getListItems(+listId!)
-  );
+  const detailsData = [{ title: 'Name', value: name }];
 
-  const { data: watchedItems } = useQuery(
-    [QUERY_KEYS.LIST_ITEMS, watchedId],
-    () => API.getListItems(+watchedId!)
-  );
-
-  const detailsData = [
-    {
-      title: 'Name',
-      value: name,
-    },
-    {
-      title: 'Description',
-      value: list.data?.data.description || '',
-    },
-  ];
+  !!list?.data.description &&
+    detailsData.push({ title: 'Description', value: list?.data.description });
 
   const statsData = [
-    {
-      title: 'Watched Movies',
-      value: watched.data?.data.itemCount,
-    },
-    {
-      title: 'Movies left to watch',
-      value: list.data?.data.itemCount,
-    },
+    { title: 'Watched Movies', value: watched?.data.itemCount },
+    { title: 'Movies left to watch', value: list?.data.itemCount },
   ];
 
   const handleListDelete = () => {
@@ -81,45 +78,42 @@ function ListStats() {
     });
   };
 
-  const handleDownload = (): void => {
-    if (!listItems || !watchedItems) return;
-
-    let csvContent = 'data:text/csv;charset=utf-8,';
-    csvContent += 'watched?,trakt_id,tmdb_id,imdb_id,title,year\n';
-
-    const appendMovieVals = (movie: ListItems, row: string[]) => {
-      row.push(movie.movie.ids.trakt?.toString() || '');
-      row.push(movie.movie.ids.tmdb?.toString() || '');
-      row.push(movie.movie.ids.imdb?.toString() || '');
-      row.push(`"${movie.movie.title}"`);
-      row.push(movie.movie.year.toString() || '');
-    };
-
-    listItems.data.forEach((movie) => {
-      let newRow = ['false'];
-      appendMovieVals(movie, newRow);
-      csvContent += newRow.join(',') + '\n';
+  const handleDownload = () => {
+    const filter = (movie: TmdbMovie, watched: boolean): CSVEntry => ({
+      watched,
+      tmdbId: movie.id,
+      title: movie.title.toString(),
+      year: +movie.releaseDate.substring(0, 4),
     });
 
-    watchedItems.data.forEach((movie) => {
-      let newRow = ['true'];
-      appendMovieVals(movie, newRow);
-      csvContent += newRow.join(',') + '\n';
-    });
+    const watchedFiltered =
+      watched?.data.items.map((movie) => filter(movie, true)) || [];
 
-    const encodedUri = encodeURI(csvContent);
+    const listFiltered =
+      list?.data.items.map((movie) => filter(movie, false)) || [];
 
-    // Download file with specified name
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute(
-      'download',
-      `${name?.split(' ').join('_')}_movielist_backup.csv`
-    );
+    return listFiltered.concat(watchedFiltered);
+  };
 
-    document.body.appendChild(link); // Required for FF
-    link.click();
-    document.body.removeChild(link);
+  const { mutateAsync: addItemsToList } = useMutation(API.addMoviesToListV4);
+
+  const handleUpload = async (results: CSVResults) => {
+    // TODO: show modal with summary - accept, cancel
+    setUploadIsLoading(true);
+    try {
+      await addItemsToList({
+        listId: listId!,
+        items: results.data.filter((entry) => !entry.watched),
+      });
+      await addItemsToList({
+        listId: watchedId!,
+        items: results.data.filter((entry) => !!entry.watched),
+      });
+      console.log('success!');
+      setUploadIsLoading(false);
+    } catch (error) {
+      console.log('error while adding items to lists');
+    }
   };
 
   return (
@@ -187,9 +181,27 @@ function ListStats() {
         <Space h={150} />
 
         <Stack spacing="xl">
-          <Button leftIcon={<Download />} onClick={handleDownload} fullWidth>
-            Download CSV
-          </Button>
+          <Group grow>
+            <CSVDownloader data={handleDownload}>
+              <Button fullWidth leftIcon={<Download />}>
+                Download CSV
+              </Button>
+            </CSVDownloader>
+            <CSVReader
+              onUploadAccepted={handleUpload}
+              config={{ header: true, dynamicTyping: true }}
+            >
+              {({ getRootProps }: any) => (
+                <Button
+                  {...getRootProps()}
+                  leftIcon={<Upload />}
+                  loading={uploadIsLoading}
+                >
+                  Upload CSV
+                </Button>
+              )}
+            </CSVReader>
+          </Group>
           <Button
             color="red"
             fullWidth

@@ -10,12 +10,13 @@ import { Film } from 'react-bootstrap-icons';
 import uuid from 'react-uuid';
 import arrow from '../assets/arrow.png';
 import MovieCard from '../components/MovieCard';
+import { TmdbMovie } from '../models/tmdb/TmdbMovie';
 
 interface MoviesProps {
   // TODO: specify types
-  movies: any;
-  list: any;
-  watched: any;
+  movies: TmdbMovie[];
+  list: string;
+  watched: string;
   listName: string;
 }
 
@@ -23,12 +24,12 @@ function Movies({ movies, list, watched, listName }: MoviesProps) {
   if (!movies) return <h3>Loading...</h3>;
 
   // TODO: specify type
-  const movieCards = movies.map((movie: any) => (
+  const movieCards = movies.map((movie) => (
     <MovieCard
       key={uuid()}
-      tmdbId={movie.movie.ids.tmdb}
-      title={movie.movie.title}
-      year={movie.movie.year}
+      tmdbId={movie.id}
+      title={movie.title}
+      year={movie.releaseDate.substring(0, 4)}
       list={list}
       watched={watched}
       listName={listName}

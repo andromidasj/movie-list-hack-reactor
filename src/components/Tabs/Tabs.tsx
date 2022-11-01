@@ -1,4 +1,3 @@
-import React from 'react';
 import { Bookmark, CheckCircle, Search } from 'react-bootstrap-icons';
 import useStore from '../../store';
 import './Tabs.scss';
