@@ -30,7 +30,7 @@ function WatchProviders({ providers, title, year }: WatchProvidersProps) {
   const { getPlexCollection } = usePlexCollection(title, year);
 
   const inPlex =
-    import.meta.env.VITE_PLEX_URL && import.meta.env.VITE_PLEX_ACCESS_TOKEN
+    import.meta.env.PLEX_URL && import.meta.env.PLEX_ACCESS_TOKEN
       ? getPlexCollection()
       : null;
 
