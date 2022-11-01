@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 env:
-  REPO: ${{ secrets.DOCKER_HUB_USERNAME }}/trakt-movie-list
+  REPO: ${{ secrets.DOCKER_HUB_USERNAME }}/movie-list
 
 jobs:
   build-push-to-docker:
@@ -26,9 +26,9 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/movie-list:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/movie-list:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/movie-list:buildcache,mode=max
+          tags: ${{ env.REPO }}:latest
+          cache-from: type=registry,ref=${{ env.REPO }}:buildcache
+          cache-to: type=registry,ref=${{ env.REPO }}:buildcache,mode=max
       - name: Recreate portainer container
         uses: fjogeleit/http-request-action@v1
         with:
